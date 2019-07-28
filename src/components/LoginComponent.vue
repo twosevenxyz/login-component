@@ -1,6 +1,6 @@
 <template>
   <div class="login-bulma">
-    <div class="modal">
+    <div class="login-modal">
       <div class="modal-background" ref="bg"></div>
       <transition name="slide-from-bottom"
           @leave="onExit"
@@ -262,14 +262,14 @@ export default {
       this.forgotEmailHelp = {}
     },
     afterExit () {
-      this.$el.querySelector('.modal').classList.remove('is-active')
+      this.$el.querySelector('.login-modal').classList.remove('is-active')
       this.$refs.bg.classList.remove('is-leaving')
     },
     onExit () {
       this.$refs.bg.classList.add('is-leaving')
     },
     onEnter () {
-      this.$el.querySelector('.modal').classList.add('is-active')
+      this.$el.querySelector('.login-modal').classList.add('is-active')
     }
   }
 }
@@ -284,10 +284,26 @@ $banner-container-height: ($banner-logo-height + $banner-title-height) + ($banne
 
 .login-bulma {
   @import '../style/bulma-imports.scss';
-  .modal {
+  .login-modal {
+    align-items: center;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    position: fixed;
+    z-index: 40;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    &.is-active {
+      display: flex;
+    }
+
     .modal-background {
       transition: all 0.5s ease-in-out;
-      background-color: inherit;
+      background-color: #000 !important;
+      opacity: 0.75;
       &.is-leaving {
         background-color: inherit !important;
       }
