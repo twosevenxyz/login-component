@@ -288,6 +288,9 @@ $banner-container-height: ($banner-logo-height + $banner-title-height) + ($banne
     margin: 0 0 -1px 0;
     padding: 8px 16px;
     font-size: 16px;
+    box-sizing: content-box;
+    font-weight: normal;
+    height: 18px;
   }
 }
 
