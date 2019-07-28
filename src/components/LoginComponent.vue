@@ -358,8 +358,8 @@ $banner-container-height: ($banner-logo-height + $banner-title-height) + ($banne
           top: 12px;
           border-radius: 290486px;
           /deep/ svg {
-            width: 14px;
-            height: 14px;
+            width: 12px;
+            height: 12px;
             vertical-align: bottom;
           }
         }
