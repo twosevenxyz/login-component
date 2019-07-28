@@ -2,7 +2,7 @@
   <div class="field has-addons" style="margin: 12px;">
     <div class="control is-expanded is-flex">
       <p class="control" :class="extraControlClasses">
-        <input class="input" :class="{'is-danger': help}"
+        <input class="input browser-default" :class="{'is-danger': help}"
             :type="type"
             :placeholder="placeholder"
             :value="value"
