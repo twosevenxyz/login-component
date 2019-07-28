@@ -7,8 +7,8 @@
           @after-leave="afterExit"
           @enter="onEnter">
         <div class="modal-content" v-if="show">
-          <a class="modal-close modal-btn is-large" aria-label="close" @click="$emit('update:show', false)"></a>
-          <a class="modal-back modal-btn is-large" aria-label="back" @click="currentTab = prevTab" v-show="currentTab > 1">
+          <a class="browser-default modal-close modal-btn is-large" aria-label="close" @click="$emit('update:show', false)"></a>
+          <a class="browser-default modal-back modal-btn is-large" aria-label="back" @click="currentTab = prevTab" v-show="currentTab > 1">
             <FontAwesomeIcon icon="arrow-left"/>
           </a>
           <div class="banner-container">
@@ -29,7 +29,7 @@
                     </div>
                     <div class="login-content basic-flex is-centered">
                       <div class="tabs basic-flex is-fullwidth">
-                        <ul>
+                        <ul class="browser-default">
                           <li :class="{'is-active': currentTab === 0}">
                             <a @click="currentTab = 0">Log In</a>
                           </li>
