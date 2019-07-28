@@ -2,10 +2,11 @@
   "name": "login-component",
   "version": "0.1.0",
   "private": true,
+  "main": "dist/LoginComponent.umd.min.js",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "library": "vue-cli-service build --target lib --name 'options' ./src/App.vue",
+    "library": "vue-cli-service build --target lib --name 'LoginComponent' ./src/App.vue",
     "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit",
     "debug:test:unit": "node --inspect-brk=0.0.0.0:9634 ./node_modules/.bin/vue-cli-service test:unit"
