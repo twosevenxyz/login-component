@@ -284,6 +284,11 @@ $banner-container-height: ($banner-logo-height + $banner-title-height) + ($banne
 
 .tabs ul {
   border-bottom: none;
+  a {
+    margin: 0 0 -1px 0;
+    padding: 8px 16px;
+    font-size: 16px;
+  }
 }
 
 .login-bulma {
