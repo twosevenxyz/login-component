@@ -67,7 +67,7 @@
                           </div>
                           <div class="columns basic-flex is-paddingless" v-if="currentTab === 0">
                             <div class="column" style="padding-top: 0">
-                              <a class="is-size-7" @click="currentTab = 2">Forgot password?</a>
+                              <a style="font-size: 14px;" @click="currentTab = 2">Forgot password?</a>
                             </div>
                           </div>
 
@@ -320,9 +320,8 @@ $banner-container-height: ($banner-logo-height + $banner-title-height) + ($banne
     .modal-content {
       width: auto;
       overflow: hidden;
-      background-color: #eaeaea;
+      background-color: #fff;
       border-radius: 10px;
-      background-color: #eaeaea;
       min-width: $container-width;
       max-width: $container-width;
       min-height: 220px;
