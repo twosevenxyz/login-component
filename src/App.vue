@@ -1,22 +1,34 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <LoginComponent :show.sync="showLogin" :logo="logo" :app-name="appName"/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import LoginComponent from './components/LoginComponent.vue'
 
 export default {
   name: 'app',
   components: {
-    HelloWorld
+    LoginComponent
+  },
+  data () {
+    return {
+      showLogin: false,
+      logo: 'https://twoseven.xyz/img/icons/android-chrome-512x512.png',
+      appName: 'TwoSeven',
+      forgotEmailInput: ''
+    }
+  },
+  mounted () {
+    setTimeout(function () { this.showLogin = true }.bind(this), 1000)
   }
 }
 </script>
 
 <style lang="scss">
+@import '~@/style/bulma-imports.scss';
+
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
