@@ -287,6 +287,7 @@ $banner-container-height: ($banner-logo-height + $banner-title-height) + ($banne
   box-sizing: content-box;
   font-size: 16px;
   line-height: initial;
+  max-height: 34px;
   a {
     margin: 0 0 -1px 0;
     padding: 8px 16px;
