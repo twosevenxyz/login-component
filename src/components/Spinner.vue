@@ -48,5 +48,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~@/style/preloader.scss';
+@import '../style/preloader.scss';
 </style>

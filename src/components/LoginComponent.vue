@@ -115,8 +115,8 @@
 </template>
 
 <script>
-import Spinner from '@/components/Spinner.vue'
-import InputElement from '@/components/InputElement.vue'
+import Spinner from './Spinner.vue'
+import InputElement from './InputElement.vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEnvelope, faLock, faChevronRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
