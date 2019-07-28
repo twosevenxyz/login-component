@@ -22,7 +22,7 @@
           <div class="content-container basic-flex" style="position :relative;">
             <transition :name="currentTab === 2 ? 'slide-out-left' : 'slide-out-right'">
               <div class="column login-container basic-flex is-paddingless" v-if="currentTab <= 1" :key="currentContainer">
-                <div class="login-content-container basic-flex">
+                <div class="login-content-container basic-flex has-text-centered">
                   <div class="columns is-vcentered is-marginless is-paddingless basic-flex">
                     <div class="column preloader-container is-marginless is-paddingless is-flex" v-if="isBusy">
                       <Spinner color="grey" size="48px"/>
