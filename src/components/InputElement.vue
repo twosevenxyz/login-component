@@ -1,6 +1,6 @@
 <template>
   <div class="field has-addons" style="margin: 12px;">
-    <div class="control is-expanded">
+    <div class="control is-expanded is-flex">
       <p class="control" :class="extraControlClasses">
         <input class="input" :class="{'is-danger': help}"
             :type="type"
@@ -51,7 +51,7 @@ export default {
 
 <style lang="scss" scoped>
 .control {
-  font-size: 14px;
+  font-size: 14px !important;
   input {
     font-size: inherit;
     padding-top: 8px;
