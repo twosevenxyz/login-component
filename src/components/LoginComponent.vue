@@ -282,8 +282,13 @@ $banner-title-height: 36px;
 $banner-padding: 8px;
 $banner-container-height: ($banner-logo-height + $banner-title-height) + ($banner-padding * 3);
 
+.tabs ul {
+  border-bottom: none;
+}
+
 .login-bulma {
   @import '../style/bulma-imports.scss';
+
   .login-modal {
     align-items: center;
     display: none;
