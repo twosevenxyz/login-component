@@ -371,7 +371,10 @@ $banner-container-height: ($banner-logo-height + $banner-title-height) + ($banne
           /deep/ svg {
             width: 12px;
             height: 12px;
-            vertical-align: bottom;
+            position: absolute;
+            left: 0;
+            top: 0;
+            transform: translate(50%, 50%);
           }
         }
       }
