@@ -34,7 +34,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import './style/bulma-imports.scss';
 
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
