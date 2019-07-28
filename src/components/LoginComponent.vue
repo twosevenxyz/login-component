@@ -96,7 +96,7 @@
           </transition>
         </div>
 
-        <a class="submit-btn is-large is-fullwidth" :style="{'background-color': theme}" @click="onSubmit">
+        <a class="submit-btn is-large is-fullwidth" :disabled="isSubmitting" :style="{'background-color': theme}" @click="onSubmit">
           <transition name="slide-from-bottom">
             <span v-if="!isSubmitting">
               {{ buttonText }}
@@ -152,7 +152,7 @@ export default {
     },
     appName: {
       type: String,
-      required: true
+      default: 'Login'
     },
     theme: {
       type: String,
@@ -160,13 +160,13 @@ export default {
     },
     logo: {
       type: String,
-      required: true
+      default: './assets/security_shield.png'
     }
   },
   data () {
     return {
       isBusy: false,
-      isSubmitting: true,
+      isSubmitting: false,
       currentTab: 0,
       prevTab: 0,
       username: '',
@@ -219,6 +219,9 @@ export default {
       }
     },
     onSubmit () {
+      if (this.isSubmitting) {
+        return
+      }
       const { currentTab, username, password, forgotEmail } = this
       let hasError = false
       switch (currentTab) {
@@ -244,6 +247,12 @@ export default {
         return
       }
       this.isSubmitting = true
+      this.$emit('submit', {
+        currentTab,
+        username,
+        password,
+        forgotEmail
+      })
     },
     resetAllHelp () {
       this.usernameHelp = {}
@@ -412,6 +421,13 @@ $banner-container-height: ($banner-logo-height + $banner-title-height) + ($banne
   letter-spacing: 1px;
   text-transform: uppercase;
   line-height: 64px;
+  &[disabled] {
+    cursor: default;
+    background-color: #fff;
+    border-color: #dbdbdb;
+    box-shadow: none;
+    opacity: 0.5;
+  }
   .icon {
     font-size: inherit;
     line-height: inherit;

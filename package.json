@@ -5,8 +5,10 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "library": "vue-cli-service build --target lib --name 'options' ./src/App.vue",
     "lint": "vue-cli-service lint",
-    "test:unit": "vue-cli-service test:unit"
+    "test:unit": "vue-cli-service test:unit",
+    "debug:test:unit": "node --inspect-brk=0.0.0.0:9634 ./node_modules/.bin/vue-cli-service test:unit"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.19",

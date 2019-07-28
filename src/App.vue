@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <LoginComponent :show.sync="showLogin" :logo="logo" :app-name="appName"/>
+    <LoginComponent :show.sync="showLogin" :logo="logo" :app-name="appName" @submit="$emit('submit', $event)"/>
   </div>
 </template>
 
@@ -12,12 +12,19 @@ export default {
   components: {
     LoginComponent
   },
+  props: {
+    logo: {
+      type: String,
+      default: 'https://twoseven.xyz/img/icons/android-chrome-512x512.png'
+    },
+    appName: {
+      type: String,
+      default: 'TwoSeven'
+    }
+  },
   data () {
     return {
-      showLogin: false,
-      logo: 'https://twoseven.xyz/img/icons/android-chrome-512x512.png',
-      appName: 'TwoSeven',
-      forgotEmailInput: ''
+      showLogin: false
     }
   },
   mounted () {
