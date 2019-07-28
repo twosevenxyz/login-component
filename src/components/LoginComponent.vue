@@ -8,7 +8,7 @@
           @enter="onEnter">
         <div class="modal-content" v-if="show">
           <a class="browser-default modal-close modal-btn is-large" aria-label="close" @click="$emit('update:show', false)"></a>
-          <a class="browser-default modal-back modal-btn is-large" aria-label="back" @click="currentTab = prevTab" v-show="currentTab > 1">
+          <a class="browser-default modal-back modal-btn is-large has-text-centered" aria-label="back" @click="currentTab = prevTab" v-show="currentTab > 1">
             <FontAwesomeIcon icon="arrow-left"/>
           </a>
           <div class="banner-container">
@@ -360,7 +360,7 @@ $banner-container-height: ($banner-logo-height + $banner-title-height) + ($banne
           /deep/ svg {
             width: 14px;
             height: 14px;
-            vertical-align: middle;
+            vertical-align: bottom;
           }
         }
       }
