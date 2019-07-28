@@ -85,7 +85,7 @@
               <div class="column forgot-password-container basic-flex is-paddingless" v-if="currentTab === 2" :key="currentContainer">
                 <div class="columns">
                   <div class="column">
-                    <p class="is-size-7" style="margin: 16px;">Enter your email address. You will receive an email to reset your password.</p>
+                    <p style="margin: 16px; font-size: 14px;">Enter your email address. You will receive an email to reset your password.</p>
                     <InputElement type="email" placeholder="your-email-id@example.com" v-model="forgotEmail" :help="forgotEmailHelp.text" @submit="onSubmit">
                       <template v-slot:leftIcon>
                         <FontAwesomeIcon icon="envelope"/>
