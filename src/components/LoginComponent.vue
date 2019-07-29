@@ -19,6 +19,11 @@
             </div>
             <h4 class="banner-title">{{ appName }}</h4>
           </div>
+          <transition name="fade">
+            <div class="has-background-danger has-text-white has-text-centered is-flex" v-if="error" style="height: 2em; align-items: center; justify-content: center;">
+              {{ error }}
+            </div>
+          </transition>
           <div class="content-container basic-flex" style="position :relative;">
             <transition :name="currentTab === 2 ? 'slide-out-left' : 'slide-out-right'">
               <div class="column login-container basic-flex is-paddingless" v-if="currentTab <= 1" :key="currentContainer">
@@ -163,6 +168,10 @@ export default {
     logo: {
       type: String,
       default: './assets/security_shield.png'
+    },
+    error: {
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -499,6 +508,13 @@ $banner-container-height: ($banner-logo-height + $banner-title-height) + ($banne
   .slide-out-right-enter, .slide-out-right-leave-to {
     transition: all .5s ease-in-out;
     transform: translateX(-200%);
+  }
+
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
   }
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <LoginComponent :show.sync="showLogin" :logo="logo" :app-name="appName" @submit="$emit('submit', $event)"/>
+    <LoginComponent :show.sync="showLogin" :logo="logo" :app-name="appName" @submit="onSubmit" :error="error"/>
   </div>
 </template>
 
@@ -24,7 +24,14 @@ export default {
   },
   data () {
     return {
-      showLogin: false
+      showLogin: false,
+      error: ''
+    }
+  },
+  methods: {
+    onSubmit ($event) {
+      this.error = ''
+      this.$emit('submit', $event)
     }
   },
   mounted () {
