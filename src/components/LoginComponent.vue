@@ -45,12 +45,12 @@
                       </div>
                       <div class="tab-content basic-flex">
                         <div class="is-active basic-flex" v-if="currentTab <= 1">
-                          <div class="columns" style="margin-bottom: 0;">
+                          <div v-if="Object.keys(social).length > 0" class="columns" style="margin-bottom: 0;">
                             <div class="column social-login-container">
-                              <a>
+                              <a v-if="social.providers.google" @click="socialLogin('google')">
                                 <img class="social-btn" src="../assets/google_logo.png">
                               </a>
-                              <a>
+                              <a v-if="social.providers.facebook" @click="socialLogin('facebook')">
                                 <img class="social-btn" src="../assets/facebook_logo.webp">
                               </a>
                             </div>
@@ -122,11 +122,18 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import Spinner from './Spinner.vue'
 import InputElement from './InputElement.vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEnvelope, faLock, faChevronRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+import { VueAuthenticate } from 'vue-authenticate'
+import VueAxios from 'vue-axios'
+import axios from 'axios'
+
+Vue.use(VueAxios, axios.create())
 
 library.add(faEnvelope)
 library.add(faLock)
@@ -153,6 +160,14 @@ export default {
     InputElement
   },
   props: {
+    social: {
+      type: Object,
+      default () {
+        return {
+          providers: {}
+        }
+      }
+    },
     show: {
       type: Boolean,
       default: false
@@ -229,7 +244,7 @@ export default {
         this[help] = {}
       }
     },
-    onSubmit () {
+    async onSubmit () {
       if (this.isSubmitting) {
         return
       }
@@ -258,6 +273,12 @@ export default {
         return
       }
       this.isSubmitting = true
+      switch (currentTab) {
+        case 0:
+          // Do login
+          await this.login(username, password)
+          break
+      }
       this.$emit('submit', {
         currentTab,
         username,
@@ -279,7 +300,36 @@ export default {
     },
     onEnter () {
       this.$el.querySelector('.login-modal').classList.add('is-active')
+    },
+    login (username, password) {
+
+    },
+    async socialLogin (provider) {
+      try {
+        const data = await new Promise(function (resolve, reject) {
+          console.log(`Attempting to authenticate with provider ${provider}`)
+          this.vueAuth.authenticate(provider).then((results) => {
+            console.log(`Authenticated with provider ${provider}`)
+            debugger
+            resolve(results.data)
+          }).catch((err) => {
+            reject(err)
+          })
+        }.bind(this))
+        this.$emit('social-login', {
+          provider,
+          ...data
+        })
+      } catch (e) {
+        this.$emit('social-login', {
+          provider,
+          error: e.message
+        })
+      }
     }
+  },
+  created () {
+    this.vueAuth = new VueAuthenticate(this.$http, this.social)
   }
 }
 </script>
