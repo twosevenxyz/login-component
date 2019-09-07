@@ -570,11 +570,19 @@ $banner-container-height: ($banner-logo-height + $banner-title-height) + ($banne
     }
   }
   .slide-from-bottom-enter-active, .slide-from-bottom-leave-active {
-    transition: all .5s ease-in-out;
+    position: absolute;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    transition: all 0.5s ease-in-out;
     transform: translateY(0%);
   }
   .slide-from-bottom-enter, .slide-from-bottom-leave-to /* .fade-leave-active below version 2.1.8 */ {
-    transition: all .5s ease-in-out;
+    position: absolute;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    transition: all 0.5s ease-in-out;
     transform: translateY(200%);
   }
 
