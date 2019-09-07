@@ -587,20 +587,56 @@ $banner-container-height: ($banner-logo-height + $banner-title-height) + ($banne
   }
 
   .slide-out-left-enter-active, .slide-out-left-leave-active {
-    transition: all .5s ease-in-out;
-    transform: translateX(0%) ;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: 1;
+    flex: 1;
+    transition: all 0.5s ease-in-out;
+    transform: translateX(0%);
   }
+  .slide-out-left-leave-active {
+    position: absolute;
+    width: 100%;
+    max-height: 0 !important;
+  }
+
   .slide-out-left-enter, .slide-out-left-leave-to {
-    transition: all .5s ease-in-out;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: 1;
+    flex: 1;
+    transition: all 0.5s ease-in-out;
     transform: translateX(-200%);
+    max-height: initial;
   }
 
   .slide-out-right-enter-active, .slide-out-right-leave-active {
-    transition: all .5s ease-in-out;
+    display: flex;
+    flex-direction: 1;
+    flex: 1;
+    margin-left: auto;
+    margin-right: auto;
+    transition: all 0.5s ease-in-out;
     transform: translateX(0%);
   }
+
+  .slide-out-right-leave-active {
+    position: absolute;
+    width: 100%;
+    max-height: 0 !important;
+  }
+
   .slide-out-right-enter, .slide-out-right-leave-to {
-    transition: all .5s ease-in-out;
+    position: absolute;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: 1;
+    flex: 1;
+    transition: all 0.5s ease-in-out;
     transform: translateX(-200%);
   }
 
