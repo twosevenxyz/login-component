@@ -20,8 +20,9 @@
             <h4 class="banner-title">{{ appName }}</h4>
           </div>
           <transition name="fade">
-            <div class="has-background-danger has-text-white has-text-centered is-flex" v-if="error" style="height: 2em; align-items: center; justify-content: center;">
-              {{ error }}
+            <div class="text-info has-background-danger has-text-white has-text-centered is-flex" v-if="error" v-html="error">
+            </div>
+            <div class="text-info has-background-success has-text-white has-text-centered is-flex" v-else-if="info" v-html="info">
             </div>
           </transition>
           <div class="content-container basic-flex" style="position :relative;">
@@ -78,7 +79,13 @@
 
                           <div class="columns basic-flex is-marginless" v-show="currentTab === 1">
                             <div class="column terms">
-                              <span>By creating an account, you agree to our terms of service and privacy policy.</span>
+                              <span>By creating an account, you agree to our
+                                <a v-if="tos" :href="tos">terms of service</a>
+                                <span v-else>terms of service</span>
+                                and
+                                <a v-if="privacyPolicy" :href="privacyPolicy">privacy policy</a>
+                                <span v-else>privacy policy</span>.
+                              </span>
                             </div>
                           </div>
                         </div>
@@ -187,6 +194,18 @@ export default {
     error: {
       type: String,
       default: ''
+    },
+    info: {
+      type: String,
+      default: ''
+    },
+    tos: {
+      type: String,
+      default: ''
+    },
+    privacyPolicy: {
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -278,12 +297,20 @@ export default {
           // Do login
           await this.login(username, password)
           break
+        case 1:
+          // Do signup
+          break
+        case 2:
+          // Forgot password
       }
       this.$emit('submit', {
         currentTab,
         username,
         password,
         forgotEmail
+      })
+      this.$on('submit-complete', () => {
+        this.isSubmitting = false
       })
     },
     resetAllHelp () {
@@ -361,6 +388,7 @@ $banner-container-height: ($banner-logo-height + $banner-title-height) + ($banne
   @import '../style/bulma-imports.scss';
 
   .login-modal {
+    color: #2a2a2a;
     align-items: center;
     display: none;
     flex-direction: column;
@@ -378,7 +406,7 @@ $banner-container-height: ($banner-logo-height + $banner-title-height) + ($banne
 
     .modal-background {
       transition: all 0.5s ease-in-out;
-      background-color: #000 !important;
+      background: radial-gradient(#4a4a4f, #10102a);
       opacity: 0.75;
       &.is-leaving {
         background-color: inherit !important;
@@ -386,7 +414,7 @@ $banner-container-height: ($banner-logo-height + $banner-title-height) + ($banne
     }
     &.is-active .modal-background {
       transition: all 0.5s ease-in-out;
-      background-color: #2a2a2a;
+      background-color: #111118;
     }
     .modal-content {
       width: auto;
@@ -396,11 +424,18 @@ $banner-container-height: ($banner-logo-height + $banner-title-height) + ($banne
       min-width: $container-width;
       max-width: $container-width;
       min-height: 220px;
-      max-height: 600px;
+      max-height: 100vh;
+      box-shadow: 0 0 40px 4px #1e1e1e;
       .content-container {
         transition: all 0.3s ease-in-out;
       }
       transition: all 0.3s ease-in-out;
+      .text-info {
+        align-items: center;
+        justify-content: center;
+        padding: 0 8px;
+        min-height: 2em;
+      }
       .modal-btn {
         position: absolute;
         color: black;
@@ -451,6 +486,7 @@ $banner-container-height: ($banner-logo-height + $banner-title-height) + ($banne
           }
         }
         .banner-title {
+          color: #2a2a2a;
           font-size: 22px;
         }
       }
