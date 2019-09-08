@@ -1,0 +1,3 @@
+[submodule "vue-authenticate"]
+	path = vue-authenticate
+	url = git@github.com:twosevenxyz/vue-authenticate

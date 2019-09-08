@@ -136,7 +136,7 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEnvelope, faLock, faChevronRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-import { VueAuthenticate } from 'vue-authenticate'
+import { VueAuthenticate } from '@/../vue-authenticate'
 import VueAxios from 'vue-axios'
 import axios from 'axios'
 
