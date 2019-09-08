@@ -136,9 +136,9 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEnvelope, faLock, faChevronRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-import { VueAuthenticate } from 'vue-authenticate'
-import VueAxios from 'vue-axios'
 import axios from 'axios'
+import VueAxios from 'vue-axios'
+import { VueAuthenticate } from 'vue-authenticate'
 
 Vue.use(VueAxios, axios.create())
 
@@ -353,7 +353,7 @@ export default {
     }
   },
   created () {
-    this.vueAuth = new VueAuthenticate(this.$http, this.social)
+    this.vueAuth = new VueAuthenticate(axios.create(), this.social)
   }
 }
 </script>
