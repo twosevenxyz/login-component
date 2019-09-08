@@ -334,10 +334,7 @@ export default {
     async socialLogin (provider) {
       try {
         const data = await new Promise(function (resolve, reject) {
-          console.log(`Attempting to authenticate with provider ${provider}`)
           this.vueAuth.authenticate(provider).then((results) => {
-            console.log(`Authenticated with provider ${provider}`)
-            debugger
             resolve(results.data)
           }).catch((err) => {
             reject(err)
