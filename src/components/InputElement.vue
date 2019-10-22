@@ -2,7 +2,7 @@
   <div class="field has-addons" style="margin: 12px;">
     <div class="control is-expanded">
       <p class="control is-flex" :class="extraControlClasses">
-        <input class="input browser-default" :class="{'is-danger': help}"
+        <input class="input" :class="[help ? 'is-danger': '', inputClasses]"
             :type="type"
             :placeholder="placeholder"
             :value="value"
@@ -35,6 +35,12 @@ export default {
     help: {
       type: String,
       default: ''
+    },
+    inputClasses: {
+      type: [Array, String, Object],
+      default () {
+        return ''
+      }
     }
   },
   computed: {

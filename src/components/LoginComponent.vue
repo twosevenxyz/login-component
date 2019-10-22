@@ -1,14 +1,14 @@
 <template>
-  <div class="login-bulma">
+  <div class="login-root">
     <div class="login-modal">
       <div class="modal-background" ref="bg"></div>
       <transition name="slide-from-bottom"
           @leave="onExit"
           @after-leave="afterExit"
           @enter="onEnter">
-        <div class="modal-content" v-if="show">
+        <div class="modal-content" v-if="show" :class="{uninitialized: !initialized, 'logged-in': showLoggedInAccounts}" style="position: relative;">
           <a class="browser-default modal-close modal-btn is-large" aria-label="close" @click="$emit('update:show', false)"></a>
-          <a class="browser-default modal-back modal-btn is-large has-text-centered" aria-label="back" @click="currentTab = prevTab" v-show="currentTab > 1">
+          <a class="browser-default modal-back modal-btn is-large has-text-centered" aria-label="back" @click="currentTab = prevTab" v-show="currentTab === tabs.FORGOT_PASSWORD">
             <FontAwesomeIcon icon="arrow-left"/>
           </a>
           <div class="banner-container">
@@ -19,84 +19,107 @@
             </div>
             <h4 class="banner-title">{{ appName }}</h4>
           </div>
-          <transition name="fade">
-            <div class="text-info has-background-danger has-text-white has-text-centered is-flex" v-if="error" v-html="error">
-            </div>
-            <div class="text-info has-background-success has-text-white has-text-centered is-flex" v-else-if="info" v-html="info">
+          <transition name="fade-translate">
+            <div v-if="error || info" style="max-height: 2em">
+              <div class="text-info has-background-danger has-text-white has-text-centered" v-show="error" v-html="error">
+              </div>
+              <div class="text-info has-background-success has-text-white has-text-centered" v-show="info" v-html="info">
+              </div>
             </div>
           </transition>
-          <div class="content-container basic-flex" style="position :relative;">
-            <transition :name="currentTab === 2 ? 'slide-out-left' : 'slide-out-right'">
-              <div class="column login-container basic-flex is-paddingless" v-if="currentTab <= 1" :key="currentContainer">
-                <div class="login-content-container basic-flex has-text-centered">
-                  <div class="columns is-vcentered is-marginless is-paddingless basic-flex">
-                    <div class="column preloader-container is-marginless is-paddingless is-flex" v-if="isBusy">
-                      <Spinner color="grey" size="48px"/>
-                    </div>
-                    <div class="login-content basic-flex is-centered">
-                      <div class="tabs basic-flex is-fullwidth">
-                        <ul class="browser-default">
-                          <li :class="{'is-active': currentTab === 0}">
-                            <a @click="currentTab = 0">Log In</a>
-                          </li>
-                          <li :class="{'is-active': currentTab === 1}">
-                            <a @click="currentTab = 1">Sign Up</a>
-                          </li>
-                        </ul>
-                      </div>
-                      <div class="tab-content basic-flex">
-                        <div class="is-active basic-flex" v-if="currentTab <= 1">
-                          <div v-if="Object.keys(social).length > 0" class="columns" style="margin-bottom: 0;">
-                            <div class="column social-login-container">
-                              <a v-if="social.providers.google" @click="socialLogin('google')">
-                                <img class="social-btn" src="../assets/google_logo.png">
-                              </a>
-                              <a v-if="social.providers.facebook" @click="socialLogin('facebook')">
-                                <img class="social-btn" src="../assets/facebook_logo.webp">
-                              </a>
-                            </div>
+          <div class="content-wrapper basic-flex" style="flex-shrink: 0;">
+            <div class="content-container">
+              <div v-if="!initialized" class="is-flex" style="height: 100%; align-items: center; justify-content: center; overflow: hidden;">
+                <Spinner color="grey" size="48px"/>
+              </div>
+              <div v-else-if="showLoggedInAccounts"
+                  class="accounts-container basic-flex"
+                  :class="loggedInId.social">
+                <div class="basic-flex" style="align-items: center; justify-content: center; margin: 0 12px;">
+                  <p style="margin-bottom: 15px">
+                    Last time you logged in with
+                  </p>
+                  <button class="button is-medium is-fullwidth account-login-btn">
+                    <span class="icon is-small">
+                      <FontAwesomeIcon icon="lock" v-if="!loggedInId.social"/>
+                      <img v-else-if="loggedInId.social === 'google'" class="social-btn google" src="../assets/google_logo.png">
+                      <img v-else-if="loggedInId.social === 'facebook'" class="social-btn facebook" src="../assets/facebook_logo.webp">
+                    </span>
+                    <span>{{ loggedInId.email }}</span>
+                  </button>
+                <p class="has-text-centered" style="margin-top: 20px;">
+                  <a @click="hideLoggedInAccounts = true">Not your account?</a>
+                </p>
+                </div>
+              </div>
+              <div v-else-if="initialized && !showLoggedInAccounts">
+                <transition :name="currentTab === tabs.FORGOT_PASSWORD ? 'slide-out-left' : 'slide-out-right'">
+                  <div class="login-container is-paddingless" v-if="currentTab === tabs.LOGIN || currentTab === tabs.SIGNUP" :key="currentContainer">
+                    <div class="login-content-container has-text-centered">
+                      <div class="columns is-vcentered is-marginless is-paddingless">
+                        <div class="login-content is-centered">
+                          <div class="tabs is-fullwidth">
+                            <ul class="browser-default">
+                              <li :class="{'is-active': currentTab === tabs.LOGIN}">
+                                <a @click="currentTab = tabs.LOGIN">Log In</a>
+                              </li>
+                              <li :class="{'is-active': currentTab === tabs.SIGNUP}">
+                                <a @click="currentTab = tabs.SIGNUP">Sign Up</a>
+                              </li>
+                            </ul>
                           </div>
-                          <p style="margin: 0 0 12px 0; font-size: 14px;">or</p>
-                          <div class="columns basic-flex login-fields-container" style="margin-bottom: 0;">
-                            <div class="column">
-                              <InputElement type="email" placeholder="your-email-id@example.com" v-model="username" :help="usernameHelp.text" @submit="onSubmit">
-                                <template v-slot:leftIcon>
-                                  <FontAwesomeIcon icon="envelope"/>
-                                </template>
-                              </InputElement>
-                              <InputElement type="password" placeholder="password" v-model="password" :help="passwordHelp.text" @submit="onSubmit">
-                                <template v-slot:leftIcon>
-                                  <FontAwesomeIcon icon="lock"/>
-                                </template>
-                              </InputElement>
-                            </div>
-                          </div>
-                          <div class="columns basic-flex is-paddingless" v-if="currentTab === 0">
-                            <div class="column" style="padding-top: 0">
-                              <a style="font-size: 14px;" @click="currentTab = 2">Forgot password?</a>
-                            </div>
-                          </div>
+                          <div class="tab-content basic-flex">
+                            <div class="is-active" v-if="currentTab === tabs.LOGIN || currentTab === tabs.SIGNUP">
+                              <div v-if="Object.keys(social).length > 0" class="columns" style="margin-bottom: 0;">
+                                <div class="column social-login-container">
+                                  <a v-if="social.providers.google" @click="socialLogin('google')">
+                                    <img class="social-btn" src="../assets/google_logo.png">
+                                  </a>
+                                  <a v-if="social.providers.facebook" @click="socialLogin('facebook')">
+                                    <img class="social-btn" src="../assets/facebook_logo.webp">
+                                  </a>
+                                </div>
+                              </div>
+                              <p style="margin: 0 0 12px 0; font-size: 14px;">or</p>
+                              <div class="columns basic-flex login-fields-container" style="margin-bottom: 0;">
+                                <div class="column is-paddingless">
+                                  <InputElement type="email" placeholder="your-email-id@example.com" v-model="username" :help="usernameHelp.text" @submit="onSubmit">
+                                    <template v-slot:leftIcon>
+                                      <FontAwesomeIcon icon="envelope"/>
+                                    </template>
+                                  </InputElement>
+                                  <InputElement type="password" placeholder="password" v-model="password" :help="passwordHelp.text" @submit="onSubmit">
+                                    <template v-slot:leftIcon>
+                                      <FontAwesomeIcon icon="lock"/>
+                                    </template>
+                                  </InputElement>
+                                </div>
+                              </div>
+                              <div class="columns basic-flex is-paddingless" v-if="currentTab === tabs.LOGIN">
+                                <!-- Margin set to 13px to ensure log-in is same size as sign-up -->
+                                <div class="column" style="padding-top: 0; margin: 13px 0;">
+                                  <a style="font-size: 14px;" @click="currentTab = tabs.FORGOT_PASSWORD">Forgot password?</a>
+                                </div>
+                              </div>
 
-                          <div class="columns basic-flex is-marginless" v-show="currentTab === 1">
-                            <div class="column terms">
-                              <span>By creating an account, you agree to our
-                                <a v-if="tos" :href="tos">terms of service</a>
-                                <span v-else>terms of service</span>
-                                and
-                                <a v-if="privacyPolicy" :href="privacyPolicy">privacy policy</a>
-                                <span v-else>privacy policy</span>.
-                              </span>
+                              <div class="columns basic-flex is-marginless" v-show="currentTab === tabs.SIGNUP">
+                                <div class="column terms">
+                                  <span>By creating an account, you agree to our
+                                    <a v-if="tos" :href="tos">terms of service</a>
+                                    <span v-else>terms of service</span>
+                                    and
+                                    <a v-if="privacyPolicy" :href="privacyPolicy">privacy policy</a>
+                                    <span v-else>privacy policy</span>.
+                                  </span>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
-              <div class="column forgot-password-container basic-flex is-paddingless" v-if="currentTab === 2" :key="currentContainer">
-                <div class="columns">
-                  <div class="column">
+                  <div class="forgot-password-container is-paddingless" v-if="currentTab === tabs.FORGOT_PASSWORD" :key="currentContainer">
                     <p class="has-text-centered" style="margin: 16px; font-size: 14px;">Enter your email address. You will receive an email to reset your password.</p>
                     <InputElement type="email" placeholder="your-email-id@example.com" v-model="forgotEmail" :help="forgotEmailHelp.text" @submit="onSubmit">
                       <template v-slot:leftIcon>
@@ -104,12 +127,12 @@
                       </template>
                     </InputElement>
                   </div>
-                </div>
+                </transition>
               </div>
-            </transition>
+            </div>
           </div>
 
-          <a class="submit-btn is-large is-fullwidth" :disabled="isSubmitting" :style="{'background-color': theme}" @click="onSubmit">
+          <a v-show="initialized && !showLoggedInAccounts" class="submit-btn is-large is-fullwidth" :disabled="isSubmitting" style="overflow: hidden;" :style="{'background-color': theme}" @click="onSubmit">
             <transition name="slide-from-bottom">
               <span v-if="!isSubmitting">
                 {{ buttonText }}
@@ -140,6 +163,8 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import { VueAuthenticate } from 'vue-authenticate'
 
+import { tabs } from '@/js/constants'
+
 Vue.use(VueAxios, axios.create())
 
 library.add(faEnvelope)
@@ -159,7 +184,7 @@ const errors = {
   }
 }
 
-export default {
+const LoginComponent = {
   name: 'LoginComponent',
   components: {
     Spinner,
@@ -178,6 +203,16 @@ export default {
     show: {
       type: Boolean,
       default: false
+    },
+    initialized: {
+      type: Boolean,
+      default: false
+    },
+    loggedInId: {
+      type: Object,
+      default () {
+        return undefined
+      }
     },
     appName: {
       type: String,
@@ -206,40 +241,47 @@ export default {
     privacyPolicy: {
       type: String,
       default: ''
+    },
+    isSubmitting: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
     return {
-      isBusy: false,
-      isSubmitting: false,
-      currentTab: 0,
-      prevTab: 0,
+      currentTab: tabs.LOGIN,
+      prevTab: tabs.LOGIN,
       username: '',
       password: '',
       forgotEmail: '',
       usernameHelp: {},
       passwordHelp: {},
-      forgotEmailHelp: {}
+      forgotEmailHelp: {},
+      tabs,
+      hideLoggedInAccounts: false
     }
   },
   computed: {
     buttonText () {
       switch (this.currentTab) {
-        case 0:
+        case tabs.LOGIN:
           return 'LOG IN'
-        case 1:
+        case tabs.SIGNUP:
           return 'SIGN UP'
-        case 2:
+        case tabs.FORGOT_PASSWORD:
           return 'Send Email'
         default:
           return '???'
       }
     },
     currentContainer () {
-      if (this.currentTab <= 1) {
+      if (this.currentTab === tabs.LOGIN || this.currentTab === tabs.SIGNUP) {
         return 'login'
       }
       return 'forgot-password'
+    },
+    showLoggedInAccounts () {
+      return this.initialized && this.loggedInId && !this.hideLoggedInAccounts
     }
   },
   watch: {
@@ -270,8 +312,8 @@ export default {
       const { currentTab, username, password, forgotEmail } = this
       let hasError = false
       switch (currentTab) {
-        case 0:
-        case 1:
+        case tabs.LOGIN:
+        case tabs.SIGNUP:
           if (username.trim() === '') {
             this.usernameHelp = errors.blank
             hasError = true
@@ -281,7 +323,7 @@ export default {
             hasError = true
           }
           break
-        case 2:
+        case tabs.FORGOT_PASSWORD:
           if (forgotEmail.trim() === '') {
             this.forgotEmailHelp = errors.blank
             hasError = true
@@ -291,16 +333,16 @@ export default {
       if (hasError) {
         return
       }
-      this.isSubmitting = true
+      this.$emit('update:isSubmitting', true)
       switch (currentTab) {
-        case 0:
+        case tabs.LOGIN:
           // Do login
           await this.login(username, password)
           break
-        case 1:
+        case tabs.SIGNUP:
           // Do signup
           break
-        case 2:
+        case tabs.FORGOT_PASSWORD:
           // Forgot password
       }
       this.$emit('submit', {
@@ -310,7 +352,7 @@ export default {
         forgotEmail
       })
       this.$on('submit-complete', () => {
-        this.isSubmitting = false
+        this.$emit('update:isSubmitting', false)
       })
     },
     resetAllHelp () {
@@ -354,16 +396,32 @@ export default {
   },
   created () {
     this.vueAuth = new VueAuthenticate(axios.create(), this.social)
+    window.login = this
   }
 }
+
+export default LoginComponent
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+$banner-background: #dadada;
 $container-width: 300px;
 $banner-logo-height: 64px;
 $banner-title-height: 36px;
 $banner-padding: 8px;
 $banner-container-height: ($banner-logo-height + $banner-title-height) + ($banner-padding * 3);
+
+$uninitialized-banner-logo-height: 36px;
+$uninitialized-banner-title-height: 24px;
+$uninitialized-banner-padding: 8px;
+$uninitialized-banner-container-height: ($uninitialized-banner-logo-height + $uninitialized-banner-title-height) + ($uninitialized-banner-padding * 3);
+
+$uninitialized-modal-content-height: 180px;
+$logged-in-modal-content-height: 290px;
+$uninitialized-content-container-height: ($uninitialized-modal-content-height - $uninitialized-banner-container-height);
+$logged-in-content-container-height: ($logged-in-modal-content-height - $banner-container-height);
+
+$account-login-background: darken(#c0c0c0, 15);
 
 .tabs ul {
   border-bottom: none;
@@ -381,9 +439,12 @@ $banner-container-height: ($banner-logo-height + $banner-title-height) + ($banne
   }
 }
 
-.login-bulma {
+.login-root {
   @import '../style/bulma-imports.scss';
-
+  .columns {
+    margin-left: 0;
+    margin-right: 0;
+  }
   .login-modal {
     color: #2a2a2a;
     align-items: center;
@@ -402,7 +463,7 @@ $banner-container-height: ($banner-logo-height + $banner-title-height) + ($banne
     }
 
     .modal-background {
-      transition: all 0.5s ease-in-out;
+      transition: all 0.3s ease-in-out;
       background: radial-gradient(#4a4a4f, #10102a);
       opacity: 0.75;
       &.is-leaving {
@@ -410,28 +471,102 @@ $banner-container-height: ($banner-logo-height + $banner-title-height) + ($banne
       }
     }
     &.is-active .modal-background {
-      transition: all 0.5s ease-in-out;
+      transition: all 0.3s ease-in-out;
       background-color: #111118;
     }
     .modal-content {
       width: auto;
-      overflow: hidden;
+      overflow-y: auto;
       background-color: #fff;
       border-radius: 10px;
       min-width: $container-width;
       max-width: $container-width;
       min-height: 220px;
-      max-height: 100vh;
       box-shadow: 0 0 40px 4px #1e1e1e;
+      transition: max-height 0.3s linear;
+      &.uninitialized, &.logged-in {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-height: $uninitialized-modal-content-height;
+        max-height: $uninitialized-modal-content-height;
+        .content-container {
+          height: 100%;
+        }
+      }
+      &.logged-in {
+        max-height: $logged-in-modal-content-height;
+        .content-container {
+          max-height: $logged-in-content-container-height;
+        }
+        .accounts-container {
+          height: 100%;
+          transition: none;
+          font-size: 0.9em;
+          color: rgba(0, 0, 0, 0.5);
+
+          &.facebook {
+            .icon {
+              background-color: #3b579d !important;
+            }
+          }
+
+          .account-login-btn {
+            background-color: $account-login-background;
+            color: white;
+            justify-content: flex-start;
+            padding: 0;
+            height: 45px;
+            line-height: 45px;
+            border: none;
+            box-shadow: none !important;
+            transition: none;
+            .icon {
+              margin: 0;
+              height: inherit;
+              line-height: inherit;
+              display: inline-flex;
+              flex-direction: row;
+              align-items: center;
+              justify-content: center;
+              background-color: darken($account-login-background, 10);
+              width: 45px;
+              border-radius: 2px;
+              > img {
+                height: 45px;
+                width: 48px;
+                &.facebook {
+                  width: 28px;
+                  height: auto;
+                  margin-right: 6px;
+                  margin-bottom: 6px;
+                  background-color: #3b579d
+                }
+              }
+            }
+            .icon + span {
+              font-size: 14px;
+              letter-spacing: 0.7px;
+              // font-family: monospace;
+              margin-left: 32px;
+            }
+            &:hover {
+              background: rgba(0,0,0,0.5);
+              .icon {
+                filter: brightness(0.8);
+              }
+            }
+          }
+        }
+      }
       .content-container {
+        overflow: auto;
         transition: all 0.3s ease-in-out;
       }
-      transition: all 0.3s ease-in-out;
       .text-info {
         align-items: center;
         justify-content: center;
-        padding: 0 8px;
-        min-height: 2em;
+        padding: 4px 8px;
       }
       .modal-btn {
         position: absolute;
@@ -470,10 +605,20 @@ $banner-container-height: ($banner-logo-height + $banner-title-height) + ($banne
           }
         }
       }
+      &.uninitialized .banner-container {
+        height: $uninitialized-banner-container-height;
+        .banner {
+          padding: $uninitialized-banner-padding 0 0 0;
+          img {
+            width: $uninitialized-banner-logo-height;
+            height: $uninitialized-banner-logo-height;
+          }
+        }
+      }
       .banner-container {
         height: $banner-container-height;
         text-align: center;
-        background-color: #dadada;
+        background-color: $banner-background;
         .banner {
           display: inline-block;
           padding: $banner-padding 0 0 0;
@@ -486,8 +631,6 @@ $banner-container-height: ($banner-logo-height + $banner-title-height) + ($banne
           color: #2a2a2a;
           font-size: 22px;
         }
-      }
-      .login-container {
       }
       .login-content-container {
         .preloader-container {
@@ -571,7 +714,7 @@ $banner-container-height: ($banner-logo-height + $banner-title-height) + ($banne
     width: 100%;
     margin-left: auto;
     margin-right: auto;
-    transition: all 0.5s ease-in-out;
+    transition: transform 0.5s ease-in-out !important;
     transform: translateY(0%);
   }
   .slide-from-bottom-enter, .slide-from-bottom-leave-to /* .fade-leave-active below version 2.1.8 */ {
@@ -579,42 +722,42 @@ $banner-container-height: ($banner-logo-height + $banner-title-height) + ($banne
     width: 100%;
     margin-left: auto;
     margin-right: auto;
-    transition: all 0.5s ease-in-out;
+    transition: transform 0.5s linear !important;
     transform: translateY(200%);
   }
 
   .slide-out-left-enter-active, .slide-out-left-leave-active {
-    margin-left: auto;
-    margin-right: auto;
-    display: flex;
-    flex-direction: 1;
-    flex: 1;
-    transition: all 0.5s ease-in-out;
+    // margin-left: auto;
+    // margin-right: auto;
+    // display: flex;
+    // flex-direction: 1;
+    // flex: 1;
+    transition: all 0.5s linear;
     transform: translateX(0%);
   }
   .slide-out-left-leave-active {
     position: absolute;
     width: 100%;
-    max-height: 0 !important;
+    // max-height: 0 !important;
   }
 
   .slide-out-left-enter, .slide-out-left-leave-to {
-    margin-left: auto;
-    margin-right: auto;
-    display: flex;
-    flex-direction: 1;
-    flex: 1;
+    // margin-left: auto;
+    // margin-right: auto;
+    // display: flex;
+    // flex-direction: 1;
+    // flex: 1;
     transition: all 0.5s ease-in-out;
     transform: translateX(-200%);
-    max-height: initial;
+    // max-height: initial;
   }
 
   .slide-out-right-enter-active, .slide-out-right-leave-active {
-    display: flex;
-    flex-direction: 1;
-    flex: 1;
-    margin-left: auto;
-    margin-right: auto;
+    // display: flex;
+    // flex-direction: 1;
+    // flex: 1;
+    // margin-left: auto;
+    // margin-right: auto;
     transition: all 0.5s ease-in-out;
     transform: translateX(0%);
   }
@@ -622,26 +765,27 @@ $banner-container-height: ($banner-logo-height + $banner-title-height) + ($banne
   .slide-out-right-leave-active {
     position: absolute;
     width: 100%;
-    max-height: 0 !important;
+    // max-height: 0 !important;
   }
 
   .slide-out-right-enter, .slide-out-right-leave-to {
     position: absolute;
     width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    display: flex;
-    flex-direction: 1;
-    flex: 1;
+    // margin-left: auto;
+    // margin-right: auto;
+    // display: flex;
+    // flex-direction: 1;
+    // flex: 1;
     transition: all 0.5s ease-in-out;
     transform: translateX(-200%);
   }
 
-  .fade-enter-active, .fade-leave-active {
-    transition: opacity .5s;
+  .fade-translate-enter-active, .fade-translate-leave-active {
+    transition: all 0.3s;
   }
-  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  .fade-translate-enter, .fade-translate-leave-to /* .fade-translate-leave-active below version 2.1.8 */ {
     opacity: 0;
+    max-height: 0 !important;
   }
 }
 </style>

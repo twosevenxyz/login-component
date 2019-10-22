@@ -1,6 +1,12 @@
 <template>
   <div id="app">
-    <LoginComponent :show.sync="showLogin" :logo="logo" :app-name="appName" @submit="onSubmit" :error="error"/>
+    <LoginComponent
+        :show.sync="showLogin"
+        :logo="logo"
+        :app-name="appName"
+        :error="error"
+        :is-submitting.sync="isSubmitting"
+        @submit="onSubmit"/>
   </div>
 </template>
 
@@ -15,17 +21,18 @@ export default {
   props: {
     logo: {
       type: String,
-      default: 'https://twoseven.xyz/img/icons/android-chrome-512x512.png'
+      default: `/security_shield.png`
     },
     appName: {
       type: String,
-      default: 'TwoSeven'
+      default: 'Your app name here'
     }
   },
   data () {
     return {
       showLogin: false,
-      error: ''
+      error: '',
+      isSubmitting: false
     }
   },
   methods: {
