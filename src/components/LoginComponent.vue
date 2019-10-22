@@ -132,7 +132,7 @@
             </div>
           </div>
 
-          <a v-show="initialized && !showLoggedInAccounts" class="submit-btn is-large is-fullwidth" :disabled="isSubmitting" style="overflow: hidden;" :style="{'background-color': theme}" @click="onSubmit">
+          <a v-show="initialized && !showLoggedInAccounts" class="submit-btn is-large is-fullwidth" :disabled="isSubmitting" style="overflow: hidden;" @click="onSubmit">
             <transition name="slide-from-bottom">
               <span v-if="!isSubmitting">
                 {{ buttonText }}
@@ -219,8 +219,14 @@ const LoginComponent = {
       default: 'Login'
     },
     theme: {
-      type: String,
-      default: '#009688'
+      type: Object,
+      default () {
+        return {
+          background: '#009688',
+          text: '#fff',
+          invertedText: '#000'
+        }
+      }
     },
     logo: {
       type: String,
@@ -297,9 +303,17 @@ const LoginComponent = {
     },
     forgotEmail (v) {
       this.testAndUpdate(v, 'forgotEmailHelp')
+    },
+    theme (v) {
+      this.updateTheme(v)
     }
   },
   methods: {
+    updateTheme (v) {
+      this.$el.style.setProperty('--generic-login-theme', this.theme.background)
+      this.$el.style.setProperty('--generic-login-text', this.theme.text)
+      this.$el.style.setProperty('--generic-login-text-inverted', this.theme.invertedText)
+    },
     testAndUpdate (value, help) {
       if (this[help].isBad && !this[help].isBad(value)) {
         this[help] = {}
@@ -394,6 +408,9 @@ const LoginComponent = {
       }
     }
   },
+  mounted () {
+    this.updateTheme(this.theme)
+  },
   created () {
     this.vueAuth = new VueAuthenticate(axios.create(), this.social)
     window.login = this
@@ -404,7 +421,9 @@ export default LoginComponent
 </script>
 
 <style lang="scss" scoped>
+$border-radius: 10px;
 $banner-background: #dadada;
+
 $container-width: 300px;
 $banner-logo-height: 64px;
 $banner-title-height: 36px;
@@ -478,12 +497,13 @@ $account-login-background: darken(#c0c0c0, 15);
       width: auto;
       overflow-y: auto;
       background-color: #fff;
-      border-radius: 10px;
+      border-radius: $border-radius;
       min-width: $container-width;
       max-width: $container-width;
       min-height: 220px;
       box-shadow: 0 0 40px 4px #1e1e1e;
       transition: max-height 0.3s linear;
+      border-bottom-color: var(--generic-login-theme);
       &.uninitialized, &.logged-in {
         display: flex;
         flex-direction: column;
@@ -683,6 +703,11 @@ $account-login-background: darken(#c0c0c0, 15);
   }
 
   .submit-btn {
+    background-color: #3a3a3a;
+    color: white;
+    background-color: var(--generic-login-theme);
+    color: var(--generic-login-text);
+    // border-radius: 0 0 #{$border-radius - 3} #{$border-radius - 3};
     position: relative;
     display: flex;
     flex: 1;
@@ -690,11 +715,14 @@ $account-login-background: darken(#c0c0c0, 15);
     text-align: center;
     justify-content: center;
     height: 64px;
-    color: white;
     font-size: 14px;
     letter-spacing: 1px;
     text-transform: uppercase;
     line-height: 64px;
+    &:hover {
+      color: black;
+      color: var(--generic-login-text-inverted);
+    }
     &[disabled] {
       cursor: default;
       background-color: #fff;
