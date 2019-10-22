@@ -2,14 +2,16 @@
   "name": "login-component",
   "version": "0.1.0",
   "private": true,
-  "main": "dist/LoginComponent.umd.min.js",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "library": "vue-cli-service build --target lib --name 'LoginComponent' ./src/components/LoginComponent.vue",
     "lint": "vue-cli-service lint",
-    "test:unit": "vue-cli-service test:unit",
-    "debug:test:unit": "node --inspect-brk=0.0.0.0:9634 ./node_modules/.bin/vue-cli-service test:unit"
+    "build-storybook": "build-storybook",
+    "debug:test:unit": "node --inspect-brk=0.0.0.0:9634 ./node_modules/.bin/vue-cli-service test:unit",
+    "library": "vue-cli-service build --target lib --name 'LoginComponent' ./src/components/LoginComponent.vue",
+    "storybook:build": "vue-cli-service storybook:build -c config/storybook",
+    "storybook:serve": "vue-cli-service storybook:serve -p 6006 -c config/storybook -s ./public",
+    "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.19",
@@ -23,6 +25,13 @@
     "vue-axios": "^2.1.4"
   },
   "devDependencies": {
+    "@babel/core": "^7.6.4",
+    "@storybook/addon-actions": "^5.2.4",
+    "@storybook/addon-knobs": "^4.1.0 || ^5.0.0",
+    "@storybook/addon-links": "^5.2.4",
+    "@storybook/addon-notes": "^4.1.0 || ^5.0.0",
+    "@storybook/addons": "^5.2.4",
+    "@storybook/vue": "^5.2.4",
     "@vue/cli-plugin-babel": "^3.9.0",
     "@vue/cli-plugin-eslint": "^3.9.0",
     "@vue/cli-plugin-unit-jest": "^3.9.0",
@@ -32,10 +41,15 @@
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",
+    "babel-loader": "^8.0.6",
+    "babel-preset-vue": "^2.0.2",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.1.0",
+    "vue-cli-plugin-storybook": "^0.6.1",
+    "vue-loader": "^15.7.1",
     "vue-template-compiler": "^2.6.10"
-  }
+  },
+  "main": "dist/LoginComponent.umd.min.js"
 }
