@@ -420,7 +420,7 @@ const LoginComponent = {
 export default LoginComponent
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 $border-radius: 10px;
 $banner-background: #dadada;
 
