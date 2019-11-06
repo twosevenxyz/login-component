@@ -742,7 +742,7 @@ $account-login-background: darken(#c0c0c0, 15);
     width: 100%;
     margin-left: auto;
     margin-right: auto;
-    transition: transform 0.5s ease-in-out !important;
+    transition: transform 0.3s ease-in-out !important;
     transform: translateY(0%);
   }
   .slide-from-bottom-enter, .slide-from-bottom-leave-to /* .fade-leave-active below version 2.1.8 */ {
@@ -750,7 +750,7 @@ $account-login-background: darken(#c0c0c0, 15);
     width: 100%;
     margin-left: auto;
     margin-right: auto;
-    transition: transform 0.5s linear !important;
+    transition: transform 0.3s linear !important;
     transform: translateY(200%);
   }
 
