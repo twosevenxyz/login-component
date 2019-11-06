@@ -105,10 +105,10 @@
                               <div class="columns basic-flex is-marginless" v-show="currentTab === tabs.SIGNUP">
                                 <div class="column terms">
                                   <span>By creating an account, you agree to our
-                                    <a v-if="tos" :href="tos">terms of service</a>
+                                    <a v-if="tos" :href="tos" target="_blank">terms of service</a>
                                     <span v-else>terms of service</span>
                                     and
-                                    <a v-if="privacyPolicy" :href="privacyPolicy">privacy policy</a>
+                                    <a v-if="privacyPolicy" :href="privacyPolicy" target="_blank">privacy policy</a>
                                     <span v-else>privacy policy</span>.
                                   </span>
                                 </div>
