@@ -359,14 +359,14 @@ const LoginComponent = {
         case tabs.FORGOT_PASSWORD:
           // Forgot password
       }
+      this.$once('submit-complete', () => {
+        this.$emit('update:isSubmitting', false)
+      })
       this.$emit('submit', {
         currentTab,
         username,
         password,
         forgotEmail
-      })
-      this.$on('submit-complete', () => {
-        this.$emit('update:isSubmitting', false)
       })
     },
     resetAllHelp () {
