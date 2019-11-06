@@ -163,7 +163,7 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import { VueAuthenticate } from 'vue-authenticate'
 
-import { tabs } from '@/js/constants'
+import { tabs } from '../js/constants'
 
 Vue.use(VueAxios, axios.create())
 
