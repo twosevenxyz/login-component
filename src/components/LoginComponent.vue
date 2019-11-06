@@ -20,7 +20,7 @@
             <h4 class="banner-title">{{ appName }}</h4>
           </div>
           <transition name="fade-translate">
-            <div v-if="error || info" style="max-height: 2em">
+            <div v-if="error || info" style="max-height: fit-content">
               <div class="text-info has-background-danger has-text-white has-text-centered" v-show="error" v-html="error">
               </div>
               <div class="text-info has-background-success has-text-white has-text-centered" v-show="info" v-html="info">
