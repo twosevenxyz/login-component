@@ -25,15 +25,6 @@ describe('LoginComponent.vue', () => {
   })
 
   describe('Theme', () => {
-    test('submit-btn uses correct theme', () => {
-      const theme = 'rgb(250, 250, 250)'
-      const wrapper = shallowMount(LoginComponent, {
-        propsData: {
-          show: true,
-          theme
-        }
-      })
-      expect(wrapper.element.querySelector('.submit-btn').style['background-color']).toEqual(theme)
-    })
+
   })
 })
