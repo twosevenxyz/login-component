@@ -68,6 +68,9 @@ storiesOf('LoginComponent', module)
       isSubmitting: {
         default: boolean('IsSubmitting', false)
       },
+      hideLoggedInAccounts: {
+        default: boolean('hideLoggedInAccounts', false)
+      },
       social: {
         providers: {
           google: boolean('Google', false),
@@ -76,7 +79,6 @@ storiesOf('LoginComponent', module)
       }
     },
     data () {
-      return {
-      }
+      return {}
     }
   }))
