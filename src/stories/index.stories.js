@@ -31,7 +31,18 @@ storiesOf('LoginComponent', module)
     components: { LoginComponent },
     template: `
   <div id="app">
-    <LoginComponent :show.sync="showModal" :initialized="initialized" :theme="theme" :logged-in-id="loggedInId" :social="social" :logo="logo" :app-name="appName" @submit="onSubmit" :error="error" :info="info" :is-submitting.sync="isSubmitting"/>
+    <LoginComponent
+      :show.sync="showModal"
+      :initialized="initialized"
+      :theme="theme"
+      :logged-in-id="loggedInId"
+      :social="social"
+      :logo="logo"
+      :app-name="appName"
+      :error="error"
+      :info="info"
+      :is-submitting.sync="isSubmitting"
+      @submit="onSubmit"/>
   </div>`,
     methods: {
       onSubmit: action('onSubmit')
@@ -72,9 +83,11 @@ storiesOf('LoginComponent', module)
         default: boolean('hideLoggedInAccounts', false)
       },
       social: {
-        providers: {
-          google: boolean('Google', false),
-          facebook: boolean('Facebook', false)
+        default: {
+          providers: {
+            google: boolean('Google', false),
+            facebook: boolean('Facebook', false)
+          }
         }
       }
     },
