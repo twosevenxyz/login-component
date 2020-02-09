@@ -141,7 +141,7 @@
                 </span>
               </span>
               <div v-else>
-                <Spinner color="#cacaca" class="small" size="38px" style="vertical-align: middle;"/>
+                <Spinner :color="submitSpinnerColor" class="small" size="38px" style="vertical-align: middle;"/>
               </div>
             </transition>
           </a>
@@ -158,11 +158,11 @@ import InputElement from './InputElement.vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEnvelope, faLock, faChevronRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import tinycolor from 'tinycolor2'
 
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import { VueAuthenticate } from 'vue-authenticate'
-
 import { tabs } from '../js/constants'
 
 Vue.use(VueAxios, axios.create())
@@ -264,7 +264,8 @@ const LoginComponent = {
       passwordHelp: {},
       forgotEmailHelp: {},
       tabs,
-      hideLoggedInAccounts: false
+      hideLoggedInAccounts: false,
+      submitSpinnerColor: '#fff'
     }
   },
   computed: {
@@ -310,9 +311,17 @@ const LoginComponent = {
   },
   methods: {
     updateTheme (v) {
-      this.$el.style.setProperty('--generic-login-theme', this.theme.background)
-      this.$el.style.setProperty('--generic-login-text', this.theme.text)
-      this.$el.style.setProperty('--generic-login-text-inverted', this.theme.invertedText)
+      const { theme: { background, text, invertedText } } = this
+      const tcBackground = tinycolor(background)
+      this.$el.style.setProperty('--generic-login-theme', background)
+      this.$el.style.setProperty('--generic-login-text', text)
+      this.$el.style.setProperty('--generic-login-text-inverted', invertedText)
+      this.$el.style.setProperty('--generic-login-theme-light', tcBackground.lighten(15).toString('hex6'))
+      if (tcBackground.isLight()) {
+        this.submitSpinnerColor = tcBackground.darken(40).toString('hex6')
+      } else {
+        this.submitSpinnerColor = tcBackground.lighten(40).toString('hex6')
+      }
     },
     testAndUpdate (value, help) {
       if (this[help].isBad && !this[help].isBad(value)) {
@@ -725,10 +734,8 @@ $account-login-background: darken(#c0c0c0, 15);
     }
     &[disabled] {
       cursor: default;
-      background-color: #fff;
-      border-color: #dbdbdb;
       box-shadow: none;
-      opacity: 0.5;
+      opacity: 0.8;
     }
     .icon {
       font-size: inherit;
