@@ -398,13 +398,14 @@ const LoginComponent = {
     },
     async socialLogin (provider) {
       try {
-        const data = await new Promise(function (resolve, reject) {
+        const data = await new Promise((resolve, reject) => {
+          this.vueAuth = this.vueAuth || new VueAuthenticate(axios.create(), this.social)
           this.vueAuth.authenticate(provider).then((results) => {
             resolve(results.data)
           }).catch((err) => {
             reject(err)
           })
-        }.bind(this))
+        })
         this.$emit('social-login', {
           provider,
           ...data
@@ -421,7 +422,6 @@ const LoginComponent = {
     this.updateTheme(this.theme)
   },
   created () {
-    this.vueAuth = new VueAuthenticate(axios.create(), this.social)
     window.login = this
   }
 }
