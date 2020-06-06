@@ -70,7 +70,7 @@
                           </div>
                           <div class="tab-content basic-flex">
                             <div class="is-active" v-if="currentTab === tabs.LOGIN || currentTab === tabs.SIGNUP">
-                              <div v-if="Object.keys(social).length > 0" class="columns" style="margin-bottom: 0;">
+                              <div v-if="hasSocialProvider" class="columns" style="margin-bottom: 0;">
                                 <div class="column social-login-container">
                                   <a v-if="social.providers.google" @click="socialLogin('google')">
                                     <img class="social-btn" src="../assets/google_logo.png">
@@ -80,7 +80,7 @@
                                   </a>
                                 </div>
                               </div>
-                              <p style="margin: 0 0 12px 0; font-size: 14px;">or</p>
+                              <p :style="{visibility: hasSocialProvider ? 'visible' : 'hidden'}" style="margin: 0 0 12px 0; font-size: 14px;">or</p>
                               <div class="columns basic-flex login-fields-container" style="margin-bottom: 0;">
                                 <div class="column is-paddingless">
                                   <InputElement type="email" placeholder="your-email-id@example.com" v-model="username" :help="usernameHelp.text" @submit="onSubmit">
@@ -269,6 +269,17 @@ const LoginComponent = {
     }
   },
   computed: {
+    hasSocialProvider () {
+      const { social } = this
+      if (!social) {
+        return false
+      }
+      const { providers } = social
+      if (!providers) {
+        return false
+      }
+      return Object.values(providers).some(element => !!element)
+    },
     buttonText () {
       switch (this.currentTab) {
         case tabs.LOGIN:
