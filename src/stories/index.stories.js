@@ -42,6 +42,8 @@ storiesOf('LoginComponent', module)
       :error="error"
       :info="info"
       :is-submitting.sync="isSubmitting"
+      :tos="tos"
+      :privacy-policy="privacyPolicy"
       @submit="onSubmit"/>
   </div>`,
     methods: {
@@ -81,6 +83,12 @@ storiesOf('LoginComponent', module)
       },
       hideLoggedInAccounts: {
         default: boolean('hideLoggedInAccounts', false)
+      },
+      tos: {
+        default: text('TOS', ``)
+      },
+      privacyPolicy: {
+        default: text('Privacy Policy', ``)
       },
       social: {
         default: {
