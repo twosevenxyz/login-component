@@ -371,23 +371,17 @@ const LoginComponent = {
       switch (currentTab) {
         case tabs.LOGIN:
           // Do login
-          await this.login(username, password)
+          this.$emit('login', { username, password })
           break
         case tabs.SIGNUP:
           // Do signup
+          this.$emit('signup', { username, password })
           break
         case tabs.FORGOT_PASSWORD:
           // Forgot password
+          this.$emit('forgot-password', { username: forgotEmail })
+          break
       }
-      this.$once('submit-complete', () => {
-        this.$emit('update:isSubmitting', false)
-      })
-      this.$emit('submit', {
-        currentTab,
-        username,
-        password,
-        forgotEmail
-      })
     },
     resetAllHelp () {
       this.usernameHelp = {}
@@ -403,9 +397,6 @@ const LoginComponent = {
     },
     onEnter () {
       this.$el.querySelector('.login-modal').classList.add('is-active')
-    },
-    login (username, password) {
-
     },
     async socialLogin (provider) {
       try {
