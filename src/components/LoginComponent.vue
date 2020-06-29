@@ -39,11 +39,11 @@
                   <p style="margin-bottom: 15px">
                     Last time you logged in with
                   </p>
-                  <button class="button is-medium is-fullwidth account-login-btn">
+                  <button class="button is-medium is-fullwidth account-login-btn" @click="$emit('last-login-login')">
                     <span class="icon is-small">
-                      <FontAwesomeIcon icon="lock" v-if="!loggedInId.social"/>
-                      <img v-else-if="loggedInId.social === 'google'" class="social-btn google" src="../assets/google_logo.png">
-                      <img v-else-if="loggedInId.social === 'facebook'" class="social-btn facebook" src="../assets/facebook_logo.webp">
+                      <img v-if="loggedInId.provider === 'google'" class="social-btn google" src="../assets/google_logo.png">
+                      <img v-else-if="loggedInId.provider === 'facebook'" class="social-btn facebook" src="../assets/facebook_logo.webp">
+                      <FontAwesomeIcon icon="lock" v-else/>
                     </span>
                     <span>{{ loggedInId.email }}</span>
                   </button>
