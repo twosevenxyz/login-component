@@ -41,7 +41,7 @@
                   </p>
                   <button class="button is-medium is-fullwidth account-login-btn" @click="$emit('last-login-login')">
                     <span class="icon is-small">
-                      <img v-if="loggedInId.provider === 'google'" class="social-btn google" src="../assets/google_logo.png">
+                      <img v-if="loggedInId.provider === 'google'" class="social-btn google" src="../assets/google_logo.webp">
                       <img v-else-if="loggedInId.provider === 'facebook'" class="social-btn facebook" src="../assets/facebook_logo.webp">
                       <FontAwesomeIcon icon="lock" v-else/>
                     </span>
