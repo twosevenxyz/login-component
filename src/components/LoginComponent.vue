@@ -162,7 +162,7 @@ import tinycolor from 'tinycolor2'
 
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-import { VueAuthenticate } from 'vue-authenticate'
+import { VueAuthenticate } from '@gurupras/vue-authenticate'
 import { tabs } from '../js/constants'
 
 Vue.use(VueAxios, axios.create())
