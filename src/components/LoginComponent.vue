@@ -39,13 +39,13 @@
                   <p style="margin-bottom: 15px">
                     Last time you logged in with
                   </p>
-                  <button class="button is-medium is-fullwidth account-login-btn" @click="$emit('last-login-login')">
+                  <button class="button is-medium is-fullwidth account-login-btn" :class="loggedInId.provider ? 'provider-' + loggedInId.provider : ''" @click="$emit('last-login-login')">
                     <span class="icon is-small" style="flex-shrink: 0;">
-                      <img v-if="loggedInId.provider === 'google'" class="social-btn google" src="../assets/google_logo.webp">
-                      <img v-else-if="loggedInId.provider === 'facebook'" class="social-btn facebook" src="../assets/facebook_logo.webp">
+                      <GoogleLogo v-if="loggedInId.provider === 'google'" class="social-btn google" style="width: 22px; height: auto;"/>
+                      <FacebookLogo v-else-if="loggedInId.provider === 'facebook'" class="social-btn" style="width: 32px; height: 32px;"/>
                       <FontAwesomeIcon icon="lock" v-else/>
                     </span>
-                    <span class="is-clipped" style="text-overflow: ellipsis">{{ loggedInId.email }}</span>
+                    <span class="is-clipped" style="text-overflow: ellipsis" :title="loggedInId.email">{{ loggedInId.email }}</span>
                   </button>
                 <p class="has-text-centered" style="margin-top: 20px;">
                   <a @click="hideLoggedInAccounts = true">Not your account?</a>
@@ -155,6 +155,8 @@
 import Vue from 'vue'
 import Spinner from './Spinner.vue'
 import InputElement from './InputElement.vue'
+import FacebookLogo from './facebook-logo.vue'
+import GoogleLogo from './google-logo.vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEnvelope, faLock, faChevronRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -189,7 +191,9 @@ const LoginComponent = {
   components: {
     Spinner,
     FontAwesomeIcon,
-    InputElement
+    InputElement,
+    FacebookLogo,
+    GoogleLogo
   },
   props: {
     social: {
@@ -452,6 +456,9 @@ $uninitialized-content-container-height: ($uninitialized-modal-content-height - 
 $logged-in-content-container-height: ($logged-in-modal-content-height - $banner-container-height);
 
 $account-login-background: darken(#c0c0c0, 15);
+$facebook-background: #3b579d;
+
+$text-color: #2a2a2a;
 
 .tabs ul {
   border-bottom: none;
@@ -476,7 +483,7 @@ $account-login-background: darken(#c0c0c0, 15);
     margin-right: 0;
   }
   .login-modal {
-    color: #2a2a2a;
+    color: $text-color;
     align-items: center;
     display: none;
     flex-direction: column;
@@ -550,8 +557,39 @@ $account-login-background: darken(#c0c0c0, 15);
             height: 45px;
             line-height: 45px;
             border: none;
+            border-radius: 5px;
             box-shadow: none !important;
             transition: none;
+            &.provider-facebook {
+              background-color: $facebook-background;
+              svg {
+                fill: $facebook-background;
+              }
+              &:hover {
+                background-color: darken($facebook-background, 10);
+                svg {
+                  fill: darken($facebook-background, 10);
+                }
+              }
+            }
+            &.provider-google {
+              background-color: #fffffe;
+              color: $text-color;
+              &:hover {
+                background-color: darken(white, 5);
+              }
+              .icon {
+                border: thin solid lightgrey;
+                border-right: none;
+                & + span {
+                  border: thin solid lightgrey;
+                  border-left: none;
+                }
+              }
+            }
+            &:hover {
+              background-color: darken($account-login-background, 5);
+            }
             .icon {
               margin: 0;
               height: inherit;
@@ -560,9 +598,12 @@ $account-login-background: darken(#c0c0c0, 15);
               flex-direction: row;
               align-items: center;
               justify-content: center;
-              background-color: darken($account-login-background, 10);
+              background-color: inherit;
               width: 45px;
-              border-radius: 2px;
+              border-right: none;
+              border-radius: inherit;
+              border-top-right-radius: 0;
+              border-bottom-right-radius: 0;
               > img {
                 height: 45px;
                 width: 48px;
@@ -571,22 +612,20 @@ $account-login-background: darken(#c0c0c0, 15);
                   height: auto;
                   margin-right: 6px;
                   margin-bottom: 6px;
-                  background-color: #3b579d
                 }
               }
             }
             .icon + span {
+              height: inherit;
               font-size: 14px;
               letter-spacing: 0.7px;
               // font-family: monospace;
-              margin-left: 16px;
-              margin-right: 16px;
-            }
-            &:hover {
-              background: rgba(0,0,0,0.5);
-              .icon {
-                filter: brightness(0.8);
-              }
+              padding-left: 16px;
+              padding-right: 16px;
+              border-left: none;
+              border-radius: inherit;
+              border-top-left-radius: 0;
+              border-bottom-left-radius: 0;
             }
           }
         }
@@ -660,7 +699,7 @@ $account-login-background: darken(#c0c0c0, 15);
           }
         }
         .banner-title {
-          color: #2a2a2a;
+          color: $text-color;
           font-size: 22px;
         }
       }
