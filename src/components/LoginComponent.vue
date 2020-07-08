@@ -40,12 +40,12 @@
                     Last time you logged in with
                   </p>
                   <button class="button is-medium is-fullwidth account-login-btn" @click="$emit('last-login-login')">
-                    <span class="icon is-small">
+                    <span class="icon is-small" style="flex-shrink: 0;">
                       <img v-if="loggedInId.provider === 'google'" class="social-btn google" src="../assets/google_logo.webp">
                       <img v-else-if="loggedInId.provider === 'facebook'" class="social-btn facebook" src="../assets/facebook_logo.webp">
                       <FontAwesomeIcon icon="lock" v-else/>
                     </span>
-                    <span>{{ loggedInId.email }}</span>
+                    <span class="is-clipped" style="text-overflow: ellipsis">{{ loggedInId.email }}</span>
                   </button>
                 <p class="has-text-centered" style="margin-top: 20px;">
                   <a @click="hideLoggedInAccounts = true">Not your account?</a>
@@ -579,7 +579,8 @@ $account-login-background: darken(#c0c0c0, 15);
               font-size: 14px;
               letter-spacing: 0.7px;
               // font-family: monospace;
-              margin-left: 32px;
+              margin-left: 16px;
+              margin-right: 16px;
             }
             &:hover {
               background: rgba(0,0,0,0.5);
