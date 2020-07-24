@@ -332,14 +332,19 @@ const LoginComponent = {
     updateTheme (v) {
       const { theme: { background, text, invertedText } } = this
       const tcBackground = tinycolor(background)
+      this.$el.style.setProperty('--theme-background', background)
+      for (let idx = 5; idx <= 15; idx += 5) {
+        this.$el.style.setProperty(`--theme-background-lighten-${idx}`, tcBackground.clone().lighten(idx).toString('hex6'))
+        this.$el.style.setProperty(`--theme-background-darken-${idx}`, tcBackground.clone().darken(idx).toString('hex6'))
+      }
       this.$el.style.setProperty('--generic-login-theme', background)
       this.$el.style.setProperty('--generic-login-text', text)
       this.$el.style.setProperty('--generic-login-text-inverted', invertedText)
-      this.$el.style.setProperty('--generic-login-theme-light', tcBackground.lighten(15).toString('hex6'))
+      this.$el.style.setProperty('--generic-login-theme-light', tcBackground.clone().lighten(15).toString('hex6'))
       if (tcBackground.isLight()) {
-        this.submitSpinnerColor = tcBackground.darken(40).toString('hex6')
+        this.submitSpinnerColor = tcBackground.clone().darken(40).toString('hex6')
       } else {
-        this.submitSpinnerColor = tcBackground.lighten(40).toString('hex6')
+        this.submitSpinnerColor = tcBackground.clone().lighten(40).toString('hex6')
       }
     },
     testAndUpdate (value, help) {
@@ -772,7 +777,7 @@ $text-color: #2a2a2a;
   .submit-btn {
     background-color: #3a3a3a;
     color: white;
-    background-color: var(--generic-login-theme);
+    background-color: var(--theme-background);
     color: var(--generic-login-text);
     // border-radius: 0 0 #{$border-radius - 3} #{$border-radius - 3};
     position: relative;
@@ -787,8 +792,8 @@ $text-color: #2a2a2a;
     text-transform: uppercase;
     line-height: 64px;
     &:hover {
-      color: black;
-      color: var(--generic-login-text-inverted);
+      background-color: var(--theme-background-darken-5);
+      color: var(--generic-login-text);
     }
     &[disabled] {
       cursor: default;
