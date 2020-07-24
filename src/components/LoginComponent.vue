@@ -433,7 +433,6 @@ const LoginComponent = {
     this.updateTheme(this.theme)
   },
   created () {
-    window.login = this
   }
 }
 
