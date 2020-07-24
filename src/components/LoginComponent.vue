@@ -521,7 +521,7 @@ $text-color: #2a2a2a;
     .modal-content {
       width: auto;
       overflow-y: auto;
-      background-color: #fff;
+      background-color: var(--generic-login-theme);
       border-radius: $border-radius;
       min-width: $container-width;
       max-width: $container-width;
@@ -640,6 +640,7 @@ $text-color: #2a2a2a;
       .content-container {
         overflow: auto;
         transition: all 0.3s ease-in-out;
+        background-color: #fff;
       }
       .text-info {
         align-items: center;
@@ -663,7 +664,7 @@ $text-color: #2a2a2a;
           background-color: black;
         }
         &:hover {
-          background-color: inherit;
+            background-color: darken(#fff, 20);
         }
         &.modal-close {
           right: 12px;
