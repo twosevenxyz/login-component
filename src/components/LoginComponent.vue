@@ -321,8 +321,11 @@ const LoginComponent = {
     forgotEmail (v) {
       this.testAndUpdate(v, 'forgotEmailHelp')
     },
-    theme (v) {
-      this.updateTheme(v)
+    theme: {
+      handler (v) {
+        this.updateTheme(v)
+      },
+      deep: true
     }
   },
   methods: {
