@@ -728,8 +728,16 @@ $text-color: #2a2a2a;
             flex-direction: column;
             padding-left: 24px;
             padding-right: 24px;
+
           }
         }
+      }
+
+      input + span.icon {
+        display: inline-flex;
+        align-items: flex-end;
+        height: 2.5em !important;
+        padding: 0;
       }
     }
   }
