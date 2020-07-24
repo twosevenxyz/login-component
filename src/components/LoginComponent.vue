@@ -442,7 +442,7 @@ const LoginComponent = {
 export default LoginComponent
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 $border-radius: 10px;
 $banner-background: #dadada;
 
@@ -733,7 +733,7 @@ $text-color: #2a2a2a;
         }
       }
 
-      input + span.icon {
+      /deep/ input + span.icon {
         display: inline-flex;
         align-items: flex-end;
         height: 2.5em !important;
