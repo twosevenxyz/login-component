@@ -5,7 +5,8 @@
       <transition name="slide-from-bottom"
           @leave="onExit"
           @after-leave="afterExit"
-          @enter="onEnter">
+          @enter="onEnter"
+          @after-enter="afterEnter">
         <div class="modal-content" v-if="show" :class="{uninitialized: !initialized, 'logged-in': showLoggedInAccounts}" style="position: relative;">
           <a class="browser-default modal-close modal-btn is-large" aria-label="close" @click="$emit('update:show', false)"></a>
           <a class="browser-default modal-back modal-btn is-large has-text-centered" aria-label="back" @click="currentTab = prevTab" v-show="currentTab === tabs.FORGOT_PASSWORD">
@@ -395,12 +396,16 @@ const LoginComponent = {
     afterExit () {
       this.$el.querySelector('.login-modal').classList.remove('is-active')
       this.$refs.bg.classList.remove('is-leaving')
+      this.$emit('modal:closed')
     },
     onExit () {
       this.$refs.bg.classList.add('is-leaving')
     },
     onEnter () {
       this.$el.querySelector('.login-modal').classList.add('is-active')
+    },
+    afterEnter () {
+      this.$emit('modal:opened')
     },
     async socialLogin (provider) {
       try {
