@@ -448,6 +448,7 @@ export default LoginComponent
 </script>
 
 <style lang="scss" scoped>
+@import '../style/bulma-imports.scss';
 $border-radius: 10px;
 $banner-background: #dadada;
 
@@ -472,24 +473,7 @@ $facebook-background: #3b579d;
 
 $text-color: #2a2a2a;
 
-.tabs ul {
-  border-bottom: none;
-  box-sizing: content-box;
-  font-size: 16px;
-  line-height: initial;
-  max-height: 34px;
-  a {
-    margin: 0 0 -1px 0;
-    padding: 8px 16px;
-    font-size: 16px;
-    box-sizing: content-box;
-    font-weight: normal;
-    height: 18px;
-  }
-}
-
-.login-root {
-  @import '../style/bulma-imports.scss';
+.login-root /deep/ {
   .columns {
     margin-left: 0;
     margin-right: 0;
@@ -542,6 +526,21 @@ $text-color: #2a2a2a;
         max-height: $uninitialized-modal-content-height;
         .content-container {
           height: 100%;
+        }
+      }
+      .tabs ul {
+        border-bottom: 1px solid transparent;
+        box-sizing: content-box;
+        font-size: 16px;
+        line-height: initial;
+        max-height: 34px;
+        a {
+          margin: 0 0 -1px 0;
+          padding: 8px 16px;
+          font-size: 16px;
+          box-sizing: content-box;
+          font-weight: normal;
+          height: 18px;
         }
       }
       &.logged-in {
@@ -740,8 +739,8 @@ $text-color: #2a2a2a;
 
       /deep/ input + span.icon {
         display: inline-flex;
-        align-items: flex-end;
-        height: 2.5em !important;
+        align-items: center;
+        height: 2.5rem !important;
         padding: 0;
       }
     }
