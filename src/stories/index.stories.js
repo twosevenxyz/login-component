@@ -3,8 +3,6 @@ import { storiesOf } from '@storybook/vue'
 import { action } from '@storybook/addon-actions'
 import { withKnobs, text, boolean, object } from '@storybook/addon-knobs'
 
-import '../style/bulma-imports.scss'
-
 import LoginComponent from '../components/LoginComponent.vue'
 import InputElement from '../components/InputElement.vue'
 
