@@ -30,7 +30,7 @@
           </transition>
           <div class="content-wrapper basic-flex" style="flex-shrink: 0;">
             <div class="content-container">
-              <div v-if="!initialized" class="is-flex" style="height: 100%; align-items: center; justify-content: center; overflow: hidden;">
+              <div v-if="!initialized" class="is-flex" style="display: flex; height: 100%; align-items: center; justify-content: center; overflow: hidden;">
                 <Spinner color="grey" size="48px"/>
               </div>
               <div v-else-if="showLoggedInAccounts"
