@@ -482,6 +482,7 @@ $text-color: #2a2a2a;
     color: $text-color;
     align-items: center;
     display: none;
+    text-align: center;
     flex-direction: column;
     justify-content: center;
     overflow: hidden;
