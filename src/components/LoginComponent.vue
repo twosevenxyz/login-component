@@ -311,6 +311,9 @@ const LoginComponent = {
     currentTab (v, o) {
       this.prevTab = o
       this.resetAllHelp()
+      // We don't clear info because we want success messages to persist
+      // An example of this is forgot-password success message
+      this.$emit('update:error', '')
     },
     username (v) {
       this.testAndUpdate(v, 'usernameHelp')
