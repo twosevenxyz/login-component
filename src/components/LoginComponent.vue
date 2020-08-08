@@ -500,7 +500,9 @@ $text-color: #2a2a2a;
     }
 
     .modal-background {
-      transition: all 0.3s ease-in-out;
+      transition-property: all;
+      transition-timing-function: ease-in-out;
+      transition-duration: 0.3s;
       background: radial-gradient(#4a4a4f, #10102a);
       opacity: 0.75;
       &.is-leaving {
@@ -508,7 +510,9 @@ $text-color: #2a2a2a;
       }
     }
     &.is-active .modal-background {
-      transition: all 0.3s ease-in-out;
+      transition-property: all;
+      transition-timing-function: ease-in-out;
+      transition-duration: 0.3s;
       background-color: #111118;
     }
     .modal-content {
@@ -520,7 +524,9 @@ $text-color: #2a2a2a;
       max-width: $container-width;
       min-height: 220px;
       box-shadow: 0 0 40px 4px #1e1e1e;
-      transition: max-height 0.3s linear;
+      transition-property: max-height;
+      transition-timing-function: linear;
+      transition-duration: 0.3s;
       border-bottom-color: var(--generic-login-theme);
       &.uninitialized, &.logged-in {
         display: flex;
@@ -647,7 +653,9 @@ $text-color: #2a2a2a;
       }
       .content-container {
         overflow: auto;
-        transition: all 0.3s ease-in-out;
+        transition-property: all;
+        transition-timing-function: ease-in-out;
+        transition-duration: 0.3s;
         background-color: #fff;
       }
       .text-info {
@@ -760,7 +768,9 @@ $text-color: #2a2a2a;
         height: 40px;
         &:hover {
           filter: brightness(70%);
-          transition: all 0.1s linear;
+          transition-property: all;
+          transition-timing-function: linear;
+          transition-duration: 0.1s;
         }
       }
     }
@@ -815,7 +825,9 @@ $text-color: #2a2a2a;
     width: 100%;
     margin-left: auto;
     margin-right: auto;
-    transition: transform 0.3s ease-in-out !important;
+    transition-property: transform !important;
+    transition-timing-function: ease-in-out;
+    transition-duration: 0.3s;
     transform: translateY(0%);
   }
   .slide-from-bottom-enter, .slide-from-bottom-leave-to /* .fade-leave-active below version 2.1.8 */ {
@@ -823,7 +835,9 @@ $text-color: #2a2a2a;
     width: 100%;
     margin-left: auto;
     margin-right: auto;
-    transition: transform 0.3s linear !important;
+    transition-property: transform !important;
+    transition-timing-function: linear;
+    transition-duration: 0.3s;
     transform: translateY(200%);
   }
 
@@ -833,7 +847,9 @@ $text-color: #2a2a2a;
     // display: flex;
     // flex-direction: 1;
     // flex: 1;
-    transition: all 0.5s linear;
+    transition-property: all;
+    transition-timing-function: linear;
+    transition-duration: 0.5s;
     transform: translateX(0%);
   }
   .slide-out-left-leave-active {
@@ -848,7 +864,9 @@ $text-color: #2a2a2a;
     // display: flex;
     // flex-direction: 1;
     // flex: 1;
-    transition: all 0.5s ease-in-out;
+    transition-property: all;
+    transition-timing-function: ease-in-out;
+    transition-duration: 0.5s;
     transform: translateX(-200%);
     // max-height: initial;
   }
@@ -859,7 +877,9 @@ $text-color: #2a2a2a;
     // flex: 1;
     // margin-left: auto;
     // margin-right: auto;
-    transition: all 0.5s ease-in-out;
+    transition-property: all;
+    transition-timing-function: ease-in-out;
+    transition-duration: 0.5s;
     transform: translateX(0%);
   }
 
@@ -877,12 +897,15 @@ $text-color: #2a2a2a;
     // display: flex;
     // flex-direction: 1;
     // flex: 1;
-    transition: all 0.5s ease-in-out;
+    transition-property: all;
+    transition-timing-function: ease-in-out;
+    transition-duration: 0.5s;
     transform: translateX(-200%);
   }
 
   .fade-translate-enter-active, .fade-translate-leave-active {
-    transition: all 0.3s;
+    transition-property: all;
+    transition-duration: 0.3s;
   }
   .fade-translate-enter, .fade-translate-leave-to /* .fade-translate-leave-active below version 2.1.8 */ {
     opacity: 0;
