@@ -84,12 +84,12 @@
                               <p :style="{visibility: hasSocialProvider ? 'visible' : 'hidden'}" style="margin: 0 0 12px 0; font-size: 14px;">or</p>
                               <div class="columns basic-flex login-fields-container" style="margin-bottom: 0;">
                                 <div class="column is-paddingless">
-                                  <InputElement type="email" placeholder="your-email-id@example.com" v-model="username" :help="usernameHelp.text" @submit="onSubmit">
+                                  <InputElement type="email" name="username" placeholder="your-email-id@example.com" v-model="username" :help="usernameHelp.text" @submit="onSubmit">
                                     <template v-slot:leftIcon>
                                       <FontAwesomeIcon icon="envelope"/>
                                     </template>
                                   </InputElement>
-                                  <InputElement type="password" placeholder="password" v-model="password" :help="passwordHelp.text" @submit="onSubmit">
+                                  <InputElement type="password" name="password" placeholder="password" v-model="password" :help="passwordHelp.text" @submit="onSubmit">
                                     <template v-slot:leftIcon>
                                       <FontAwesomeIcon icon="lock"/>
                                     </template>
