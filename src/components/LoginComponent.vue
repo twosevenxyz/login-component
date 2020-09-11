@@ -8,110 +8,112 @@
           @enter="onEnter"
           @after-enter="afterEnter">
         <div class="modal-content" v-if="show" :class="{uninitialized: !initialized, 'logged-in': showLoggedInAccounts}" style="position: relative;">
-          <a class="browser-default modal-close modal-btn is-large" aria-label="close" @click="$emit('update:show', false)"></a>
-          <a class="browser-default modal-back modal-btn is-large has-text-centered" aria-label="back" @click="currentTab = prevTab" v-show="currentTab === tabs.FORGOT_PASSWORD">
-            <FontAwesomeIcon icon="arrow-left"/>
-          </a>
-          <div class="banner-container">
-            <div class="banner">
-              <figure class="image">
-                <img class="is-rounded" :src="logo"/>
-              </figure>
+          <form id="login">
+            <a class="browser-default modal-close modal-btn is-large" aria-label="close" @click="$emit('update:show', false)"></a>
+            <a class="browser-default modal-back modal-btn is-large has-text-centered" aria-label="back" @click="currentTab = prevTab" v-show="currentTab === tabs.FORGOT_PASSWORD">
+              <FontAwesomeIcon icon="arrow-left"/>
+            </a>
+            <div class="banner-container">
+              <div class="banner">
+                <figure class="image">
+                  <img class="is-rounded" :src="logo"/>
+                </figure>
+              </div>
+              <h4 class="banner-title">{{ appName }}</h4>
             </div>
-            <h4 class="banner-title">{{ appName }}</h4>
-          </div>
-          <transition name="fade-translate">
-            <div v-if="error || info" style="max-height: fit-content">
-              <div class="text-info has-background-danger has-text-white has-text-centered" v-show="error" v-html="error">
-              </div>
-              <div class="text-info has-background-success has-text-white has-text-centered" v-show="info" v-html="info">
-              </div>
-            </div>
-          </transition>
-          <div class="content-wrapper basic-flex" style="flex-shrink: 0;">
-            <div class="content-container">
-              <div v-if="!initialized" class="is-flex" style="display: flex; height: 100%; align-items: center; justify-content: center; overflow: hidden;">
-                <Spinner color="grey" size="48px"/>
-              </div>
-              <div v-else-if="showLoggedInAccounts"
-                  class="accounts-container basic-flex"
-                  :class="loggedInId.social">
-                <div class="basic-flex" style="align-items: center; justify-content: center; margin: 0 12px;">
-                  <p style="margin-bottom: 15px">
-                    Last time you logged in with
-                  </p>
-                  <button class="button is-medium is-fullwidth account-login-btn" :class="loggedInId.provider ? 'provider-' + loggedInId.provider : ''" @click="$emit('last-login-login')">
-                    <span class="icon is-small" style="flex-shrink: 0;">
-                      <GoogleLogo v-if="loggedInId.provider === 'google'" class="social-btn google" style="width: 22px; height: auto;"/>
-                      <FacebookLogo v-else-if="loggedInId.provider === 'facebook'" class="social-btn" style="width: 32px; height: 32px;"/>
-                      <FontAwesomeIcon icon="lock" v-else/>
-                    </span>
-                    <span class="is-clipped" style="text-overflow: ellipsis" :title="loggedInId.email">{{ loggedInId.email }}</span>
-                  </button>
-                <p class="has-text-centered" style="margin-top: 20px;">
-                  <a @click="hideLoggedInAccounts = true">Not your account?</a>
-                </p>
+            <transition name="fade-translate">
+              <div v-if="error || info" style="max-height: fit-content">
+                <div class="text-info has-background-danger has-text-white has-text-centered" v-show="error" v-html="error">
+                </div>
+                <div class="text-info has-background-success has-text-white has-text-centered" v-show="info" v-html="info">
                 </div>
               </div>
-              <div v-else-if="initialized && !showLoggedInAccounts">
-                <transition :name="currentTab === tabs.FORGOT_PASSWORD ? 'slide-out-left' : 'slide-out-right'">
-                  <div class="login-container is-paddingless" v-if="currentTab === tabs.LOGIN || currentTab === tabs.SIGNUP" :key="currentContainer">
-                    <div class="login-content-container has-text-centered">
-                      <div class="columns is-vcentered is-marginless is-paddingless">
-                        <div class="login-content is-centered">
-                          <div class="tabs is-fullwidth">
-                            <ul class="browser-default">
-                              <li :class="{'is-active': currentTab === tabs.LOGIN}">
-                                <a @click="currentTab = tabs.LOGIN">Log In</a>
-                              </li>
-                              <li :class="{'is-active': currentTab === tabs.SIGNUP}">
-                                <a @click="currentTab = tabs.SIGNUP">Sign Up</a>
-                              </li>
-                            </ul>
-                          </div>
-                          <div class="tab-content basic-flex">
-                            <div class="is-active" v-if="currentTab === tabs.LOGIN || currentTab === tabs.SIGNUP">
-                              <div v-if="hasSocialProvider" class="columns" style="margin-bottom: 0;">
-                                <div class="column social-login-container">
-                                  <a v-if="social.providers.google" @click="socialLogin('google')">
-                                    <img class="social-btn" src="../assets/google_logo.png">
-                                  </a>
-                                  <a v-if="social.providers.facebook" @click="socialLogin('facebook')">
-                                    <img class="social-btn" src="../assets/facebook_logo.webp">
-                                  </a>
+            </transition>
+            <div class="content-wrapper basic-flex" style="flex-shrink: 0;">
+              <div class="content-container">
+                <div v-if="!initialized" class="is-flex" style="display: flex; height: 100%; align-items: center; justify-content: center; overflow: hidden;">
+                  <Spinner color="grey" size="48px"/>
+                </div>
+                <div v-else-if="showLoggedInAccounts"
+                    class="accounts-container basic-flex"
+                    :class="loggedInId.social">
+                  <div class="basic-flex" style="align-items: center; justify-content: center; margin: 0 12px;">
+                    <p style="margin-bottom: 15px">
+                      Last time you logged in with
+                    </p>
+                    <button class="button is-medium is-fullwidth account-login-btn" :class="loggedInId.provider ? 'provider-' + loggedInId.provider : ''" @click="$emit('last-login-login')">
+                      <span class="icon is-small" style="flex-shrink: 0;">
+                        <GoogleLogo v-if="loggedInId.provider === 'google'" class="social-btn google" style="width: 22px; height: auto;"/>
+                        <FacebookLogo v-else-if="loggedInId.provider === 'facebook'" class="social-btn" style="width: 32px; height: 32px;"/>
+                        <FontAwesomeIcon icon="lock" v-else/>
+                      </span>
+                      <span class="is-clipped" style="text-overflow: ellipsis" :title="loggedInId.email">{{ loggedInId.email }}</span>
+                    </button>
+                  <p class="has-text-centered" style="margin-top: 20px;">
+                    <a @click="hideLoggedInAccounts = true">Not your account?</a>
+                  </p>
+                  </div>
+                </div>
+                <div v-else-if="initialized && !showLoggedInAccounts">
+                  <transition :name="currentTab === tabs.FORGOT_PASSWORD ? 'slide-out-left' : 'slide-out-right'">
+                    <div class="login-container is-paddingless" v-if="currentTab === tabs.LOGIN || currentTab === tabs.SIGNUP" :key="currentContainer">
+                      <div class="login-content-container has-text-centered">
+                        <div class="columns is-vcentered is-marginless is-paddingless">
+                          <div class="login-content is-centered">
+                            <div class="tabs is-fullwidth">
+                              <ul class="browser-default">
+                                <li :class="{'is-active': currentTab === tabs.LOGIN}">
+                                  <a @click="currentTab = tabs.LOGIN">Log In</a>
+                                </li>
+                                <li :class="{'is-active': currentTab === tabs.SIGNUP}">
+                                  <a @click="currentTab = tabs.SIGNUP">Sign Up</a>
+                                </li>
+                              </ul>
+                            </div>
+                            <div class="tab-content basic-flex">
+                              <div class="is-active" v-if="currentTab === tabs.LOGIN || currentTab === tabs.SIGNUP">
+                                <div v-if="hasSocialProvider" class="columns" style="margin-bottom: 0;">
+                                  <div class="column social-login-container">
+                                    <a v-if="social.providers.google" @click="socialLogin('google')">
+                                      <img class="social-btn" src="../assets/google_logo.png">
+                                    </a>
+                                    <a v-if="social.providers.facebook" @click="socialLogin('facebook')">
+                                      <img class="social-btn" src="../assets/facebook_logo.webp">
+                                    </a>
+                                  </div>
                                 </div>
-                              </div>
-                              <p :style="{visibility: hasSocialProvider ? 'visible' : 'hidden'}" style="margin: 0 0 12px 0; font-size: 14px;">or</p>
-                              <div class="columns basic-flex login-fields-container" style="margin-bottom: 0;">
-                                <div class="column is-paddingless">
-                                  <InputElement type="email" name="username" placeholder="your-email-id@example.com" v-model="username" :help="usernameHelp.text" @submit="onSubmit">
-                                    <template v-slot:leftIcon>
-                                      <FontAwesomeIcon icon="envelope"/>
-                                    </template>
-                                  </InputElement>
-                                  <InputElement type="password" name="password" placeholder="password" v-model="password" :help="passwordHelp.text" @submit="onSubmit">
-                                    <template v-slot:leftIcon>
-                                      <FontAwesomeIcon icon="lock"/>
-                                    </template>
-                                  </InputElement>
+                                <p :style="{visibility: hasSocialProvider ? 'visible' : 'hidden'}" style="margin: 0 0 12px 0; font-size: 14px;">or</p>
+                                <div class="columns basic-flex login-fields-container" style="margin-bottom: 0;">
+                                  <div class="column is-paddingless">
+                                    <InputElement type="email" name="username" placeholder="your-email-id@example.com" autocomplete="username" v-model="username" :help="usernameHelp.text" @submit="onSubmit">
+                                      <template v-slot:leftIcon>
+                                        <FontAwesomeIcon icon="envelope"/>
+                                      </template>
+                                    </InputElement>
+                                    <InputElement type="password" name="password" placeholder="password" autocomplete="password" v-model="password" :help="passwordHelp.text" @submit="onSubmit">
+                                      <template v-slot:leftIcon>
+                                        <FontAwesomeIcon icon="lock"/>
+                                      </template>
+                                    </InputElement>
+                                  </div>
                                 </div>
-                              </div>
-                              <div class="columns basic-flex is-paddingless" v-if="currentTab === tabs.LOGIN">
-                                <!-- Margin set to 13px to ensure log-in is same size as sign-up -->
-                                <div class="column" style="padding-top: 0; margin: 13px 0;">
-                                  <a style="font-size: 14px;" @click="currentTab = tabs.FORGOT_PASSWORD">Forgot password?</a>
+                                <div class="columns basic-flex is-paddingless" v-if="currentTab === tabs.LOGIN">
+                                  <!-- Margin set to 13px to ensure log-in is same size as sign-up -->
+                                  <div class="column" style="padding-top: 0; margin: 13px 0;">
+                                    <a style="font-size: 14px;" @click="currentTab = tabs.FORGOT_PASSWORD">Forgot password?</a>
+                                  </div>
                                 </div>
-                              </div>
 
-                              <div class="columns basic-flex is-marginless" v-show="currentTab === tabs.SIGNUP">
-                                <div class="column terms">
-                                  <span>By creating an account, you agree to our
-                                    <a v-if="tos" :href="tos" target="_blank">terms of service</a>
-                                    <span v-else>terms of service</span>
-                                    and
-                                    <a v-if="privacyPolicy" :href="privacyPolicy" target="_blank">privacy policy</a>
-                                    <span v-else>privacy policy</span>.
-                                  </span>
+                                <div class="columns basic-flex is-marginless" v-show="currentTab === tabs.SIGNUP">
+                                  <div class="column terms">
+                                    <span>By creating an account, you agree to our
+                                      <a v-if="tos" :href="tos" target="_blank">terms of service</a>
+                                      <span v-else>terms of service</span>
+                                      and
+                                      <a v-if="privacyPolicy" :href="privacyPolicy" target="_blank">privacy policy</a>
+                                      <span v-else>privacy policy</span>.
+                                    </span>
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -119,33 +121,33 @@
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div class="forgot-password-container is-paddingless" v-if="currentTab === tabs.FORGOT_PASSWORD" :key="currentContainer">
-                    <p class="has-text-centered" style="margin: 16px; font-size: 14px;">Enter your email address. You will receive an email to reset your password.</p>
-                    <InputElement type="email" placeholder="your-email-id@example.com" v-model="forgotEmail" :help="forgotEmailHelp.text" @submit="onSubmit">
-                      <template v-slot:leftIcon>
-                        <FontAwesomeIcon icon="envelope"/>
-                      </template>
-                    </InputElement>
-                  </div>
-                </transition>
+                    <div class="forgot-password-container is-paddingless" v-if="currentTab === tabs.FORGOT_PASSWORD" :key="currentContainer">
+                      <p class="has-text-centered" style="margin: 16px; font-size: 14px;">Enter your email address. You will receive an email to reset your password.</p>
+                      <InputElement type="email" placeholder="your-email-id@example.com" v-model="forgotEmail" :help="forgotEmailHelp.text" @submit="onSubmit">
+                        <template v-slot:leftIcon>
+                          <FontAwesomeIcon icon="envelope"/>
+                        </template>
+                      </InputElement>
+                    </div>
+                  </transition>
+                </div>
               </div>
             </div>
-          </div>
 
-          <a v-show="initialized && !showLoggedInAccounts" class="submit-btn is-large is-fullwidth" :disabled="isSubmitting" style="overflow: hidden;" @click="onSubmit">
-            <transition name="slide-from-bottom">
-              <span v-if="!isSubmitting">
-                {{ buttonText }}
-                <span class="icon" v-if="!isSubmitting">
-                  <i class="fab"><FontAwesomeIcon icon="chevron-right"/></i>
+            <a v-show="initialized && !showLoggedInAccounts" class="submit-btn is-large is-fullwidth" :disabled="isSubmitting" style="overflow: hidden;" @click="onSubmit">
+              <transition name="slide-from-bottom">
+                <span v-if="!isSubmitting">
+                  {{ buttonText }}
+                  <span class="icon" v-if="!isSubmitting">
+                    <i class="fab"><FontAwesomeIcon icon="chevron-right"/></i>
+                  </span>
                 </span>
-              </span>
-              <div v-else>
-                <Spinner :color="submitSpinnerColor" class="small" size="38px" style="vertical-align: middle;"/>
-              </div>
-            </transition>
-          </a>
+                <div v-else>
+                  <Spinner :color="submitSpinnerColor" class="small" size="38px" style="vertical-align: middle;"/>
+                </div>
+              </transition>
+            </a>
+          </form>
         </div>
       </transition>
     </div>
