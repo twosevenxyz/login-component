@@ -81,7 +81,7 @@
                                   </a>
                                 </div>
                               </div>
-                              <p :style="{visibility: hasSocialProvider ? 'visible' : 'hidden'}" style="margin: 0 0 12px 0; font-size: 14px;">or</p>
+                              <p :style="{visibility: hasSocialProvider ? 'visible' : 'hidden'}" style="margin: 0 0 12px 0; font-size: 14px;">OR</p>
                               <div class="columns basic-flex login-fields-container" style="margin-bottom: 0;">
                                 <div class="column is-paddingless">
                                   <InputElement type="email" name="username" placeholder="your-email-id@example.com" autocomplete="username" v-model="username" :help="usernameHelp.text" @submit="onSubmit">
