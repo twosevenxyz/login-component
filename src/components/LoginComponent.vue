@@ -74,10 +74,18 @@
                               <div v-if="hasSocialProvider" class="columns" style="margin-bottom: 0;">
                                 <div class="column social-login-container">
                                   <a v-if="social.providers.google" @click="socialLogin('google')">
-                                    <img class="social-btn" src="../assets/google_logo.png">
+                                    <SocialLoginButton class="social-btn" name="Google">
+                                      <template slot="logo">
+                                        <GoogleLogo class="logo"/>
+                                      </template>
+                                    </SocialLoginButton>
                                   </a>
                                   <a v-if="social.providers.facebook" @click="socialLogin('facebook')">
-                                    <img class="social-btn" src="../assets/facebook_logo.webp">
+                                    <SocialLoginButton class="social-btn" name="Facebook">
+                                      <template slot="logo">
+                                        <FacebookLogo class="logo facebook"/>
+                                      </template>
+                                    </SocialLoginButton>
                                   </a>
                                 </div>
                               </div>
@@ -158,6 +166,7 @@ import Spinner from './Spinner.vue'
 import InputElement from './InputElement.vue'
 import FacebookLogo from './facebook-logo.vue'
 import GoogleLogo from './google-logo.vue'
+import SocialLoginButton from './social-login-button'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEnvelope, faLock, faChevronRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -194,7 +203,8 @@ const LoginComponent = {
     FontAwesomeIcon,
     InputElement,
     FacebookLogo,
-    GoogleLogo
+    GoogleLogo,
+    SocialLoginButton
   },
   props: {
     social: {
@@ -235,7 +245,7 @@ const LoginComponent = {
     },
     logo: {
       type: String,
-      default: './assets/security_shield.png'
+      default: '/security_shield.png'
     },
     error: {
       type: String,
@@ -760,18 +770,16 @@ $text-color: #2a2a2a;
 
   .social-login-container {
     a {
+      position: relative;
+      display: block;
+      margin: 0 0.8em;
       &:not(:last-child) {
-        margin-right: 8px;
+        margin-bottom: 12px;
       }
-      img.social-btn {
-        width: 40px;
-        height: 40px;
-        &:hover {
-          filter: brightness(70%);
-          transition-property: all;
-          transition-timing-function: linear;
-          transition-duration: 0.1s;
-        }
+      /deep/ .logo.facebook {
+        background-color: $facebook-background;
+        fill: $facebook-background;
+        border-radius: 3px;
       }
     }
   }
