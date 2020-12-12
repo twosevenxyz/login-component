@@ -3,9 +3,8 @@
     <div class="control is-expanded">
       <p class="control is-flex" :class="extraControlClasses">
         <input class="input" :class="[help ? 'is-danger': '', inputClasses]"
-            :type="type"
-            :placeholder="placeholder"
-            :value="value"
+            :id="inputId"
+            v-bind="$inputAttrs"
             @keyup.enter.stop="$emit('submit')"
             @input="$emit('input', $event.target.value)">
         <span v-if="$slots.leftIcon" class="icon is-small is-left">
@@ -21,17 +20,6 @@
 export default {
   name: 'InputElement',
   props: {
-    type: {
-      type: String,
-      default: 'text'
-    },
-    placeholder: {
-      type: String,
-      default: 'Enter text here'
-    },
-    value: {
-      type: String
-    },
     help: {
       type: String,
       default: ''
@@ -41,6 +29,9 @@ export default {
       default () {
         return ''
       }
+    },
+    inputId: {
+      type: String
     }
   },
   computed: {
@@ -50,6 +41,10 @@ export default {
         ret.push('has-icons-left')
       }
       return ret
+    },
+    $inputAttrs () {
+      const { $attrs: { help, inputClasses, ...$inputAttrs } } = this
+      return $inputAttrs
     }
   }
 }
