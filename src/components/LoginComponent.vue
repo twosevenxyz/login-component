@@ -97,7 +97,7 @@
                                       <FontAwesomeIcon icon="envelope"/>
                                     </template>
                                   </InputElement>
-                                  <InputElement type="password" name="password" placeholder="password" autocomplete="password" v-model="password" :help="passwordHelp.text" @submit="onSubmit">
+                                  <InputElement type="password" name="password" placeholder="password" :autocomplete="currentTab === tabs.LOGIN ? 'current-password' : 'new-password'" v-model="password" :help="passwordHelp.text" @submit="onSubmit">
                                     <template v-slot:leftIcon>
                                       <FontAwesomeIcon icon="lock"/>
                                     </template>
