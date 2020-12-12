@@ -21,7 +21,7 @@ export default {
   props: {
     logo: {
       type: String,
-      default: `/security_shield.png`
+      default: '/security_shield.png'
     },
     appName: {
       type: String,
