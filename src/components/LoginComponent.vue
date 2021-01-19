@@ -318,6 +318,13 @@ const LoginComponent = {
     }
   },
   watch: {
+    show (v) {
+      if (v) {
+        this.$emit('show')
+      } else {
+        this.$emit('hide')
+      }
+    },
     currentTab (v, o) {
       this.prevTab = o
       this.resetAllHelp()
