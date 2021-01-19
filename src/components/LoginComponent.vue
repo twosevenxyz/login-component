@@ -49,7 +49,7 @@
                     <span class="is-clipped" style="text-overflow: ellipsis" :title="loggedInId.email">{{ loggedInId.email }}</span>
                   </button>
                 <p class="has-text-centered" style="margin-top: 20px;">
-                  <a @click="hideLoggedInAccounts = true">Not your account?</a>
+                  <a class="alternate-login" @click="hideLoggedInAccounts = true">Not your account?</a>
                 </p>
                 </div>
               </div>
