@@ -54,7 +54,7 @@
                 </div>
               </div>
               <div v-else-if="initialized && !showLoggedInAccounts">
-                <transition :name="currentTab === tabs.FORGOT_PASSWORD ? 'slide-out-left' : 'slide-out-right'">
+                <transition-group :name="currentTab === tabs.FORGOT_PASSWORD ? 'slide-out-left' : 'slide-out-right'">
                   <div class="login-container is-paddingless" v-if="currentTab === tabs.LOGIN || currentTab === tabs.SIGNUP" :key="currentContainer">
                     <div class="login-content-container has-text-centered">
                       <div class="columns is-vcentered is-marginless is-paddingless">
@@ -136,7 +136,7 @@
                       </template>
                     </InputElement>
                   </div>
-                </transition>
+                </transition-group>
               </div>
             </div>
           </div>
@@ -161,7 +161,6 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import Spinner from './Spinner.vue'
 import InputElement from './InputElement.vue'
 import FacebookLogo from './facebook-logo.vue'
@@ -176,8 +175,6 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import { VueAuthenticate } from '@gurupras/vue-authenticate'
 import { tabs } from '../js/constants'
-
-Vue.use(VueAxios, axios.create())
 
 library.add(faEnvelope)
 library.add(faLock)
@@ -454,6 +451,7 @@ const LoginComponent = {
     this.updateTheme(this.theme)
   },
   created () {
+    this.use(VueAxios, axios.create())
   }
 }
 
