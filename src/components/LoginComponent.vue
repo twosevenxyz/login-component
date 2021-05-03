@@ -161,7 +161,6 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import Spinner from './Spinner.vue'
 import InputElement from './InputElement.vue'
 import FacebookLogo from './facebook-logo.vue'
@@ -176,8 +175,6 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import { VueAuthenticate } from '@gurupras/vue-authenticate'
 import { tabs } from '../js/constants'
-
-Vue.use(VueAxios, axios.create())
 
 library.add(faEnvelope)
 library.add(faLock)
@@ -461,6 +458,7 @@ const LoginComponent = {
     this.updateTheme(this.theme)
   },
   created () {
+    this.use(VueAxios, axios.create())
   }
 }
 
