@@ -172,7 +172,6 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import tinycolor from 'tinycolor2'
 
 import axios from 'axios'
-import VueAxios from 'vue-axios'
 import { VueAuthenticate } from '@gurupras/vue-authenticate'
 import { tabs } from '../js/constants'
 
@@ -458,7 +457,7 @@ const LoginComponent = {
     this.updateTheme(this.theme)
   },
   created () {
-    this.use(VueAxios, axios.create())
+    this.$http = axios.create()
   }
 }
 
