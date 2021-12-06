@@ -166,7 +166,7 @@ import Spinner from './Spinner.vue'
 import InputElement from './InputElement.vue'
 import FacebookLogo from './facebook-logo.vue'
 import GoogleLogo from './google-logo.vue'
-import SocialLoginButton from './social-login-button'
+import SocialLoginButton from './social-login-button.vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEnvelope, faLock, faChevronRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -493,7 +493,7 @@ $facebook-background: #3b579d;
 
 $text-color: #2a2a2a;
 
-.login-root /deep/ {
+.login-root ::v-deep {
   .columns {
     margin-left: 0;
     margin-right: 0;
@@ -707,7 +707,7 @@ $text-color: #2a2a2a;
           left: 12px;
           top: 12px;
           border-radius: 290486px;
-          /deep/ svg {
+          ::v-deep svg {
             width: 12px;
             height: 12px;
             position: absolute;
@@ -748,7 +748,7 @@ $text-color: #2a2a2a;
         .preloader-container {
           text-align: center;
           align-items: center;
-          /deep/ .custom-spinner {
+          ::v-deep .custom-spinner {
             display: inline-block;
           }
         }
@@ -766,7 +766,7 @@ $text-color: #2a2a2a;
         }
       }
 
-      /deep/ input + span.icon {
+      ::v-deep input + span.icon {
         display: inline-flex;
         align-items: center;
         height: 2.5rem !important;
@@ -783,7 +783,7 @@ $text-color: #2a2a2a;
       &:not(:last-child) {
         margin-bottom: 12px;
       }
-      /deep/ .logo.facebook {
+      ::v-deep .logo.facebook {
         background-color: $facebook-background;
         fill: $facebook-background;
         border-radius: 3px;
