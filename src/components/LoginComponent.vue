@@ -54,7 +54,7 @@
                 </div>
               </div>
               <div v-else-if="initialized && !showLoggedInAccounts">
-                <transition :name="currentTab === tabs.FORGOT_PASSWORD ? 'slide-out-left' : 'slide-out-right'">
+                <transition-group :name="currentTab === tabs.FORGOT_PASSWORD ? 'slide-out-left' : 'slide-out-right'">
                   <div class="login-container is-paddingless" v-if="currentTab === tabs.LOGIN || currentTab === tabs.SIGNUP" :key="currentContainer">
                     <div class="login-content-container has-text-centered">
                       <div class="columns is-vcentered is-marginless is-paddingless">
@@ -136,7 +136,7 @@
                       </template>
                     </InputElement>
                   </div>
-                </transition>
+                </transition-group>
               </div>
             </div>
           </div>
