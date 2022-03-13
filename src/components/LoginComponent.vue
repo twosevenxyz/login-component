@@ -704,6 +704,11 @@ $text-color: #2a2a2a;
           top: 12px;
         }
         &.modal-back {
+          display: flex;
+          flex-direction: column;
+          flex: 1;
+          align-items: center;
+          justify-content: center;
           left: 12px;
           top: 12px;
           border-radius: 290486px;
