@@ -48,7 +48,7 @@ $speed: 1.25s;
   transform-origin: center;
 
   .path {
-    animation: dash $speed ease-in-out infinite, color $speed * 4 ease-in-out $speed / 2 infinite;
+    animation: dash $speed ease-in-out infinite, color $speed * 4 ease-in-out calc($speed / 2) infinite;
     stroke-linecap: round;
   }
 }
