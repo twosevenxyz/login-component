@@ -712,7 +712,7 @@ $text-color: #2a2a2a;
           left: 12px;
           top: 12px;
           border-radius: 290486px;
-          ::v-deep svg {
+          ::v-deep(svg) {
             width: 12px;
             height: 12px;
             position: absolute;
@@ -753,7 +753,7 @@ $text-color: #2a2a2a;
         .preloader-container {
           text-align: center;
           align-items: center;
-          ::v-deep .custom-spinner {
+          ::v-deep(.custom-spinner) {
             display: inline-block;
           }
         }
@@ -771,7 +771,7 @@ $text-color: #2a2a2a;
         }
       }
 
-      ::v-deep input + span.icon {
+      ::v-deep(input + span.icon) {
         display: inline-flex;
         align-items: center;
         height: 2.5rem !important;
@@ -788,7 +788,7 @@ $text-color: #2a2a2a;
       &:not(:last-child) {
         margin-bottom: 12px;
       }
-      ::v-deep .logo.facebook {
+      ::v-deep(.logo.facebook) {
         background-color: $facebook-background;
         fill: $facebook-background;
         border-radius: 3px;

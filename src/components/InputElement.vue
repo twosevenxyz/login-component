@@ -87,7 +87,7 @@ export default {
   .icon {
     height: 2.5rem !important;
     padding: 8px 0;
-    ::v-deep .svg-inline--fa {
+    ::v-deep(.svg-inline--fa) {
       font-size: inherit;
       width: inherit;
       vertical-align: bottom;
