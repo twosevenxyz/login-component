@@ -1,3 +1,39 @@
+<script lang="ts" setup>
+import { computed, useAttrs, useSlots } from 'vue'
+
+const props = withDefaults(defineProps<{
+  help?: string,
+  inputClasses?: string[] | string | Record<string, boolean>,
+  inputId?: string,
+  modelValue?: string
+}>(), {
+  help: '',
+  inputClasses: '',
+  modelValue: ''
+})
+
+const $slots = useSlots()
+const $attrs = useAttrs()
+
+const $emit = defineEmits<{
+  (e: 'submit'): void,
+  (e: 'input', value: string): void,
+  (e: 'update:modelValue', value: string): void
+}>()
+const extraControlClasses = computed(() => {
+  const ret = []
+  if ($slots.leftIcon) {
+    ret.push('has-icons-left')
+  }
+  return ret
+})
+
+const $inputAttrs = computed(() => {
+  const { help, inputClasses, ...$inputAttrs } = $attrs
+  return $inputAttrs
+})
+</script>
+
 <template>
   <div class="field has-addons" style="margin: 12px;">
     <div class="control is-expanded">
@@ -6,7 +42,7 @@
             :id="inputId"
             v-bind="$inputAttrs"
             @keyup.enter.stop="$emit('submit')"
-            @input="$emit('input', $event.target.value)">
+            @input="$event => { $emit('input', ($event.target as HTMLInputElement).value); $emit('update:modelValue', ($event.target as HTMLInputElement).value) }">
         <span v-if="$slots.leftIcon" class="icon is-small is-left">
           <slot name="leftIcon"></slot>
         </span>
@@ -15,40 +51,6 @@
     </div>
   </div>
 </template>
-
-<script>
-export default {
-  name: 'InputElement',
-  props: {
-    help: {
-      type: String,
-      default: ''
-    },
-    inputClasses: {
-      type: [Array, String, Object],
-      default () {
-        return ''
-      }
-    },
-    inputId: {
-      type: String
-    }
-  },
-  computed: {
-    extraControlClasses () {
-      const ret = []
-      if (this.$slots.leftIcon) {
-        ret.push('has-icons-left')
-      }
-      return ret
-    },
-    $inputAttrs () {
-      const { $attrs: { help, inputClasses, ...$inputAttrs } } = this
-      return $inputAttrs
-    }
-  }
-}
-</script>
 
 <style lang="scss" scoped>
 @import 'bulma/sass/utilities/_all.sass';
@@ -86,11 +88,13 @@ export default {
   }
   .icon {
     height: 2.5rem !important;
-    padding: 8px 0;
-    ::v-deep(.svg-inline--fa) {
+    top: unset !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    :deep(svg) {
       font-size: inherit;
       width: inherit;
-      vertical-align: bottom;
     }
   }
 }

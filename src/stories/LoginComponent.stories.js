@@ -98,33 +98,36 @@ export default {
 }
 
 const Template = (args, { argTypes }) => {
-  debugger
   return {
-    template: `
-    <LoginComponent
-      :show.sync="showModal"
-      :initialized="initialized"
-      :theme="theme"
-      :logged-in-id="loggedInId"
-      :social="social"
-      :logo="logo"
-      :app-name="appName"
-      :error="error"
-      :info="info"
-      :is-submitting.sync="isSubmitting"
-      :tos="tos"
-      :privacy-policy="privacyPolicy"
-      @submit="onSubmit"/>
-    `,
     components: { LoginComponent },
     props: Object.keys(argTypes),
+    setup () {
+      return { args }
+    },
     data () {
       return {}
     },
     methods: {
       onSubmit () {
       }
-    }
+    },
+    template: `
+    <LoginComponent
+      :show.sync="args.showModal"
+      :initialized="args.initialized"
+      :theme="args.theme"
+      :logged-in-id="args.loggedInId"
+      :error="args.error"
+      :info="args.info"
+      :logo="args.logo"
+      :app-name="args.appName"
+      :is-submitting.sync="args.isSubmitting"
+      :hide-logged-in-accounts="args.hideLoggedInAccounts"
+      :tos="args.tos"
+      :privacy-policy="args.privacyPolicy"
+      :social="args.social"
+      @submit="onSubmit"/>
+    `
   }
 }
 
@@ -132,9 +135,11 @@ export const Standard = Template.bind({})
 Standard.args = {
   showModal: false,
   initialized: false,
-  background: '#009688',
-  text: '#fff',
-  invertedText: '#000',
+  theme: {
+    background: '#009689',
+    text: '#fff',
+    invertedText: '#000'
+  },
   loggedInId: undefined,
   error: '',
   info: '',

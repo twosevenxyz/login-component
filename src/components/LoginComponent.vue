@@ -1,6 +1,295 @@
+<script lang="ts" setup>
+import Spinner from './Spinner.vue'
+import InputElement from './InputElement.vue'
+import FacebookLogo from './facebook-logo.vue'
+import GoogleLogo from './google-logo.vue'
+import SocialLoginButton from './social-login-button.vue'
+// @ts-ignore
+import tinycolor from 'tinycolor2'
+
+import axios from 'axios'
+// @ts-ignore../lib/constants
+import { VueAuthenticate } from '@gurupras/vue-authenticate'
+import { tabs } from '../lib/constants'
+import type { Theme } from '../lib/theme'
+import { computed, onMounted, ref, Ref, watch } from 'vue'
+
+type ErrorEntry = {
+  text: string
+  isBad(field: string): boolean
+}
+
+const errors: Record<string, ErrorEntry> = {
+  blank: {
+    text: 'Cannot be blank',
+    isBad (field: string) {
+      if (field.trim().length > 0) {
+        return false
+      }
+      return true
+    }
+  }
+}
+
+const props = withDefaults(defineProps<{
+  social?: any,
+  show?: boolean,
+  initialized?: boolean,
+  loggedInId?: any,
+  appName?: string,
+  theme?: Theme,
+  logo?: string,
+  error?: string,
+  info?: string,
+  tos?: string,
+  privacyPolicy?: string,
+  isSubmitting?: boolean
+}>(), {
+  social: {
+    providers: {}
+  },
+  show: false,
+  initialized: false,
+  loggedInId: undefined,
+  appName: 'Login',
+  theme: {
+    background: '#009688',
+    text: '#fff',
+    invertedText: '#000'
+  },
+  logo: '/security_shield.png',
+  error: '',
+  info: '',
+  tos: '',
+  privacyPolicy: '',
+  isSubmitting: false
+})
+
+const $emit = defineEmits<{
+  (e: 'modal:show'): void,
+  (e: 'modal:hide'): void,
+  (e: 'update:error', value: string): void,
+  (e: 'update:isSubmitting', value: boolean): void,
+  (e: 'login', value: { username: string, password: string }): void,
+  (e: 'signup', value: { username: string, password: string }): void,
+  (e: 'forgot-password', value: { username: string }): void,
+  (e: 'modal:closed'): void,
+  (e: 'modal:opened'): void,
+  (e: 'social-login', value: { provider: string, error?: string }): void
+}>()
+
+const $el = ref<HTMLElement>(null as any)
+const bg = ref<HTMLElement>(null as any)
+const currentTab = ref<string>(tabs.LOGIN)
+const prevTab = ref<string>(tabs.LOGIN)
+const username = ref<string>('')
+const password = ref<string>('')
+const forgotEmail = ref<string>('')
+const usernameHelp = ref<ErrorEntry>({} as ErrorEntry)
+const passwordHelp = ref<ErrorEntry>({} as ErrorEntry)
+const forgotEmailHelp = ref<ErrorEntry>({} as ErrorEntry)
+const hideLoggedInAccounts = ref<boolean>(false)
+const submitSpinnerColor = ref<string>('#fff')
+
+const hasSocialProvider = computed(() => {
+  if (!props.social) {
+    return false
+  }
+  if (!props.social.providers) {
+    return false
+  }
+  return Object.values(props.social.providers).some(element => !!element)
+})
+
+const buttonText = computed(() => {
+  switch (currentTab.value) {
+    case tabs.LOGIN:
+      return 'LOG IN'
+    case tabs.SIGNUP:
+      return 'SIGN UP'
+    case tabs.FORGOT_PASSWORD:
+      return 'Send Email'
+    default:
+      return '???'
+  }
+})
+
+const currentContainer = computed(() => {
+  if (currentTab.value === tabs.LOGIN || currentTab.value === tabs.SIGNUP) {
+    return 'login'
+  }
+  return 'forgot-password'
+})
+
+const showLoggedInAccounts = computed(() => {
+  return props.initialized && props.loggedInId && !hideLoggedInAccounts.value
+})
+
+watch(() => props.show, v => {
+  if (v) {
+    $emit('modal:show')
+  } else {
+    $emit('modal:hide')
+  }
+})
+
+watch(() => currentTab.value, (v, o) => {
+  prevTab.value = o
+  resetAllHelp()
+  // We don't clear info because we want success messages to persist
+  // An example of this is forgot-password success message
+  $emit('update:error', '')
+})
+
+watch(() => username.value, (v) => {
+  testAndUpdate(v, usernameHelp)
+})
+
+watch(() => password.value, (v) => {
+  testAndUpdate(v, passwordHelp)
+})
+
+watch(() => forgotEmail.value, (v) => {
+  testAndUpdate(v, forgotEmailHelp)
+})
+
+watch(() => props.theme, (v) => {
+  updateTheme(v!)
+}, {
+  deep: true
+})
+
+const style = computed(() => {
+  const { background, text, invertedText } = props.theme!
+  const tcBackground = tinycolor(background)
+  const ret: Record<string, string> = {}
+
+  ret['--theme-background'] = background!
+
+  for (let idx = 5; idx <= 15; idx += 5) {
+    ret[`--theme-background-lighten-${idx}`] = tcBackground.clone().lighten(idx).toString('hex6')
+    ret[`--theme-background-darken-${idx}`] = tcBackground.clone().darken(idx).toString('hex6')
+  }
+  ret['--generic-login-theme'] = background!
+  ret['--generic-login-text'] = text!
+  ret['--generic-login-text-inverted'] = invertedText!
+  ret['--generic-login-theme-light'] = tcBackground.clone().lighten(15).toString('hex6')
+  return ret
+})
+
+const updateTheme = (theme: Theme) => {
+  const { background } = theme
+  const tcBackground = tinycolor(background)
+  if (tcBackground.isLight()) {
+    submitSpinnerColor.value = tcBackground.clone().darken(40).toString('hex6')
+  } else {
+    submitSpinnerColor.value = tcBackground.clone().lighten(40).toString('hex6')
+  }
+}
+
+const testAndUpdate = (value: string, help: Ref<ErrorEntry>) => {
+  if (help.value.isBad && !help.value.isBad(value)) {
+    help.value = {} as ErrorEntry
+  }
+}
+
+const onSubmit = async () => {
+  if (props.isSubmitting) {
+    return
+  }
+  let hasError = false
+  switch (currentTab.value) {
+    case tabs.LOGIN:
+    case tabs.SIGNUP:
+      if (username.value.trim() === '') {
+        usernameHelp.value = errors.blank
+        hasError = true
+      }
+      if (password.value.trim() === '') {
+        passwordHelp.value = errors.blank
+        hasError = true
+      }
+      break
+    case tabs.FORGOT_PASSWORD:
+      if (forgotEmail.value.trim() === '') {
+        forgotEmailHelp.value = errors.blank
+        hasError = true
+      }
+      break
+  }
+  if (hasError) {
+    return
+  }
+  $emit('update:isSubmitting', true)
+  switch (currentTab.value) {
+    case tabs.LOGIN:
+      // Do login
+      $emit('login', { username: username.value, password: password.value })
+      break
+    case tabs.SIGNUP:
+      // Do signup
+      $emit('signup', { username: username.value, password: password.value })
+      break
+    case tabs.FORGOT_PASSWORD:
+      // Forgot password
+      $emit('forgot-password', { username: forgotEmail.value })
+      break
+  }
+}
+
+const resetAllHelp = () => {
+  usernameHelp.value = {} as ErrorEntry
+  passwordHelp.value = {} as ErrorEntry
+  forgotEmailHelp.value = {} as ErrorEntry
+}
+
+const afterExit = () => {
+  bg.value.classList.remove('is-leaving')
+  $emit('modal:closed')
+}
+
+const onExit = () => {
+  bg.value.classList.add('is-leaving')
+}
+
+const onEnter = () => {
+}
+
+const afterEnter = () => {
+  $emit('modal:opened')
+}
+
+let vueAuth: any
+const socialLogin = async (provider: string) => {
+  try {
+    const data = await new Promise((resolve, reject) => {
+      vueAuth = vueAuth || new VueAuthenticate(axios.create(), props.social)
+      vueAuth.authenticate(provider).then((results: any) => {
+        resolve(results.data)
+      }).catch((err: Error) => {
+        reject(err)
+      })
+    })
+    $emit('social-login', {
+      provider,
+      ...(data as any)
+    })
+  } catch (e: any) {
+    $emit('social-login', {
+      provider,
+      error: e.message
+    })
+  }
+}
+
+onMounted(() => {
+  updateTheme(props.theme!)
+})
+</script>
+
 <template>
-  <div class="login-root">
-    <div class="login-modal">
+  <div class="login-root" ref="$el" :style="style">
+    <div class="login-modal is-active">
       <div class="modal-background" ref="bg"></div>
       <transition name="slide-from-bottom"
           @leave="onExit"
@@ -10,7 +299,7 @@
         <div class="modal-content" v-if="show" :class="{uninitialized: !initialized, 'logged-in': showLoggedInAccounts}" style="position: relative;">
           <a class="browser-default modal-close modal-btn is-large" aria-label="close" @click="$emit('update:show', false)"></a>
           <a class="browser-default modal-back modal-btn is-large has-text-centered" aria-label="back" @click="currentTab = prevTab" v-show="currentTab === tabs.FORGOT_PASSWORD">
-            <FontAwesomeIcon icon="arrow-left"/>
+            <i-mdi-arrow-left/>
           </a>
           <div class="banner-container">
             <div class="banner">
@@ -44,7 +333,7 @@
                     <span class="icon is-small" style="flex-shrink: 0;">
                       <GoogleLogo v-if="loggedInId.provider === 'google'" class="social-btn google" style="width: 22px; height: auto;"/>
                       <FacebookLogo v-else-if="loggedInId.provider === 'facebook'" class="social-btn" style="width: 32px; height: 32px;"/>
-                      <FontAwesomeIcon icon="lock" v-else/>
+                      <i-mdi-lock v-else/>
                     </span>
                     <span class="is-clipped" style="text-overflow: ellipsis" :title="loggedInId.email">{{ loggedInId.email }}</span>
                   </button>
@@ -94,12 +383,12 @@
                                 <div class="column is-paddingless">
                                   <InputElement type="email" name="username" placeholder="your-email-id@example.com" autocomplete="username" v-model="username" :help="usernameHelp.text" @submit="onSubmit">
                                     <template v-slot:leftIcon>
-                                      <FontAwesomeIcon icon="envelope"/>
+                                      <i-mdi-email/>
                                     </template>
                                   </InputElement>
                                   <InputElement type="password" name="password" placeholder="password" :autocomplete="currentTab === tabs.LOGIN ? 'current-password' : 'new-password'" v-model="password" :help="passwordHelp.text" @submit="onSubmit">
                                     <template v-slot:leftIcon>
-                                      <FontAwesomeIcon icon="lock"/>
+                                      <i-mdi-lock/>
                                     </template>
                                   </InputElement>
                                 </div>
@@ -132,7 +421,7 @@
                     <p class="has-text-centered" style="margin: 16px; font-size: 14px;">Enter your email address. You will receive an email to reset your password.</p>
                     <InputElement type="email" placeholder="your-email-id@example.com" v-model="forgotEmail" :help="forgotEmailHelp.text" @submit="onSubmit">
                       <template v-slot:leftIcon>
-                        <FontAwesomeIcon icon="envelope"/>
+                        <i-mdi-email/>
                       </template>
                     </InputElement>
                   </div>
@@ -146,7 +435,9 @@
               <span v-if="!isSubmitting">
                 {{ buttonText }}
                 <span class="icon" v-if="!isSubmitting">
-                  <i class="fab"><FontAwesomeIcon icon="chevron-right"/></i>
+                  <i class="fab">
+                    <i-mdi-chevron-right/>
+                  </i>
                 </span>
               </span>
               <div v-else>
@@ -159,310 +450,6 @@
     </div>
   </div>
 </template>
-
-<script>
-import Spinner from './Spinner.vue'
-import InputElement from './InputElement.vue'
-import FacebookLogo from './facebook-logo.vue'
-import GoogleLogo from './google-logo.vue'
-import SocialLoginButton from './social-login-button.vue'
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faEnvelope, faLock, faChevronRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import tinycolor from 'tinycolor2'
-
-import axios from 'axios'
-import { VueAuthenticate } from '@gurupras/vue-authenticate'
-import { tabs } from '../js/constants'
-
-library.add(faEnvelope)
-library.add(faLock)
-library.add(faChevronRight)
-library.add(faArrowLeft)
-
-const errors = {
-  blank: {
-    text: 'Cannot be blank',
-    isBad (field) {
-      if (field.trim().length > 0) {
-        return false
-      }
-      return true
-    }
-  }
-}
-
-const LoginComponent = {
-  name: 'LoginComponent',
-  components: {
-    Spinner,
-    FontAwesomeIcon,
-    InputElement,
-    FacebookLogo,
-    GoogleLogo,
-    SocialLoginButton
-  },
-  props: {
-    social: {
-      type: Object,
-      default () {
-        return {
-          providers: {}
-        }
-      }
-    },
-    show: {
-      type: Boolean,
-      default: false
-    },
-    initialized: {
-      type: Boolean,
-      default: false
-    },
-    loggedInId: {
-      type: Object,
-      default () {
-        return undefined
-      }
-    },
-    appName: {
-      type: String,
-      default: 'Login'
-    },
-    theme: {
-      type: Object,
-      default () {
-        return {
-          background: '#009688',
-          text: '#fff',
-          invertedText: '#000'
-        }
-      }
-    },
-    logo: {
-      type: String,
-      default: '/security_shield.png'
-    },
-    error: {
-      type: String,
-      default: ''
-    },
-    info: {
-      type: String,
-      default: ''
-    },
-    tos: {
-      type: String,
-      default: ''
-    },
-    privacyPolicy: {
-      type: String,
-      default: ''
-    },
-    isSubmitting: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data () {
-    return {
-      currentTab: tabs.LOGIN,
-      prevTab: tabs.LOGIN,
-      username: '',
-      password: '',
-      forgotEmail: '',
-      usernameHelp: {},
-      passwordHelp: {},
-      forgotEmailHelp: {},
-      tabs,
-      hideLoggedInAccounts: false,
-      submitSpinnerColor: '#fff'
-    }
-  },
-  computed: {
-    hasSocialProvider () {
-      const { social } = this
-      if (!social) {
-        return false
-      }
-      const { providers } = social
-      if (!providers) {
-        return false
-      }
-      return Object.values(providers).some(element => !!element)
-    },
-    buttonText () {
-      switch (this.currentTab) {
-        case tabs.LOGIN:
-          return 'LOG IN'
-        case tabs.SIGNUP:
-          return 'SIGN UP'
-        case tabs.FORGOT_PASSWORD:
-          return 'Send Email'
-        default:
-          return '???'
-      }
-    },
-    currentContainer () {
-      if (this.currentTab === tabs.LOGIN || this.currentTab === tabs.SIGNUP) {
-        return 'login'
-      }
-      return 'forgot-password'
-    },
-    showLoggedInAccounts () {
-      return this.initialized && this.loggedInId && !this.hideLoggedInAccounts
-    }
-  },
-  watch: {
-    show (v) {
-      if (v) {
-        this.$emit('show')
-      } else {
-        this.$emit('hide')
-      }
-    },
-    currentTab (v, o) {
-      this.prevTab = o
-      this.resetAllHelp()
-      // We don't clear info because we want success messages to persist
-      // An example of this is forgot-password success message
-      this.$emit('update:error', '')
-    },
-    username (v) {
-      this.testAndUpdate(v, 'usernameHelp')
-    },
-    password (v) {
-      this.testAndUpdate(v, 'passwordHelp')
-    },
-    forgotEmail (v) {
-      this.testAndUpdate(v, 'forgotEmailHelp')
-    },
-    theme: {
-      handler (v) {
-        this.updateTheme(v)
-      },
-      deep: true
-    }
-  },
-  methods: {
-    updateTheme (v) {
-      const { theme: { background, text, invertedText } } = this
-      const tcBackground = tinycolor(background)
-      this.$el.style.setProperty('--theme-background', background)
-      for (let idx = 5; idx <= 15; idx += 5) {
-        this.$el.style.setProperty(`--theme-background-lighten-${idx}`, tcBackground.clone().lighten(idx).toString('hex6'))
-        this.$el.style.setProperty(`--theme-background-darken-${idx}`, tcBackground.clone().darken(idx).toString('hex6'))
-      }
-      this.$el.style.setProperty('--generic-login-theme', background)
-      this.$el.style.setProperty('--generic-login-text', text)
-      this.$el.style.setProperty('--generic-login-text-inverted', invertedText)
-      this.$el.style.setProperty('--generic-login-theme-light', tcBackground.clone().lighten(15).toString('hex6'))
-      if (tcBackground.isLight()) {
-        this.submitSpinnerColor = tcBackground.clone().darken(40).toString('hex6')
-      } else {
-        this.submitSpinnerColor = tcBackground.clone().lighten(40).toString('hex6')
-      }
-    },
-    testAndUpdate (value, help) {
-      if (this[help].isBad && !this[help].isBad(value)) {
-        this[help] = {}
-      }
-    },
-    async onSubmit () {
-      if (this.isSubmitting) {
-        return
-      }
-      const { currentTab, username, password, forgotEmail } = this
-      let hasError = false
-      switch (currentTab) {
-        case tabs.LOGIN:
-        case tabs.SIGNUP:
-          if (username.trim() === '') {
-            this.usernameHelp = errors.blank
-            hasError = true
-          }
-          if (password.trim() === '') {
-            this.passwordHelp = errors.blank
-            hasError = true
-          }
-          break
-        case tabs.FORGOT_PASSWORD:
-          if (forgotEmail.trim() === '') {
-            this.forgotEmailHelp = errors.blank
-            hasError = true
-          }
-          break
-      }
-      if (hasError) {
-        return
-      }
-      this.$emit('update:isSubmitting', true)
-      switch (currentTab) {
-        case tabs.LOGIN:
-          // Do login
-          this.$emit('login', { username, password })
-          break
-        case tabs.SIGNUP:
-          // Do signup
-          this.$emit('signup', { username, password })
-          break
-        case tabs.FORGOT_PASSWORD:
-          // Forgot password
-          this.$emit('forgot-password', { username: forgotEmail })
-          break
-      }
-    },
-    resetAllHelp () {
-      this.usernameHelp = {}
-      this.passwordHelp = {}
-      this.forgotEmailHelp = {}
-    },
-    afterExit () {
-      this.$el.querySelector('.login-modal').classList.remove('is-active')
-      this.$refs.bg.classList.remove('is-leaving')
-      this.$emit('modal:closed')
-    },
-    onExit () {
-      this.$refs.bg.classList.add('is-leaving')
-    },
-    onEnter () {
-      this.$el.querySelector('.login-modal').classList.add('is-active')
-    },
-    afterEnter () {
-      this.$emit('modal:opened')
-    },
-    async socialLogin (provider) {
-      try {
-        const data = await new Promise((resolve, reject) => {
-          this.vueAuth = this.vueAuth || new VueAuthenticate(axios.create(), this.social)
-          this.vueAuth.authenticate(provider).then((results) => {
-            resolve(results.data)
-          }).catch((err) => {
-            reject(err)
-          })
-        })
-        this.$emit('social-login', {
-          provider,
-          ...data
-        })
-      } catch (e) {
-        this.$emit('social-login', {
-          provider,
-          error: e.message
-        })
-      }
-    }
-  },
-  mounted () {
-    this.updateTheme(this.theme)
-  },
-  created () {
-    this.$http = axios.create()
-  }
-}
-
-export default LoginComponent
-</script>
 
 <style lang="scss" scoped>
 @import '../style/bulma-imports.scss';
@@ -490,7 +477,7 @@ $facebook-background: #3b579d;
 
 $text-color: #2a2a2a;
 
-.login-root ::v-deep {
+.login-root :deep() {
   .columns {
     margin-left: 0;
     margin-right: 0;
@@ -709,7 +696,7 @@ $text-color: #2a2a2a;
           left: 12px;
           top: 12px;
           border-radius: 290486px;
-          ::v-deep(svg) {
+          :deep(svg) {
             width: 12px;
             height: 12px;
             position: absolute;
@@ -750,7 +737,7 @@ $text-color: #2a2a2a;
         .preloader-container {
           text-align: center;
           align-items: center;
-          ::v-deep(.custom-spinner) {
+          :deep(.custom-spinner) {
             display: inline-block;
           }
         }
@@ -768,7 +755,7 @@ $text-color: #2a2a2a;
         }
       }
 
-      ::v-deep(input + span.icon) {
+      :deep(input + span.icon) {
         display: inline-flex;
         align-items: center;
         height: 2.5rem !important;
@@ -785,7 +772,7 @@ $text-color: #2a2a2a;
       &:not(:last-child) {
         margin-bottom: 12px;
       }
-      ::v-deep(.logo.facebook) {
+      :deep(.logo.facebook) {
         background-color: $facebook-background;
         fill: $facebook-background;
         border-radius: 3px;
@@ -847,7 +834,7 @@ $text-color: #2a2a2a;
     transition-duration: 0.3s;
     transform: translateY(0%);
   }
-  .slide-from-bottom-enter, .slide-from-bottom-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  .slide-from-bottom-enter-from, .slide-from-bottom-leave-to /* .fade-leave-active below version 2.1.8 */ {
     position: absolute;
     width: 100%;
     margin-left: auto;
@@ -875,7 +862,7 @@ $text-color: #2a2a2a;
     // max-height: 0 !important;
   }
 
-  .slide-out-left-enter, .slide-out-left-leave-to {
+  .slide-out-left-enter-from, .slide-out-left-leave-to {
     // margin-left: auto;
     // margin-right: auto;
     // display: flex;
@@ -906,7 +893,7 @@ $text-color: #2a2a2a;
     // max-height: 0 !important;
   }
 
-  .slide-out-right-enter, .slide-out-right-leave-to {
+  .slide-out-right-enter-from, .slide-out-right-leave-to {
     position: absolute;
     width: 100%;
     // margin-left: auto;
@@ -924,7 +911,7 @@ $text-color: #2a2a2a;
     transition-property: all;
     transition-duration: 0.3s;
   }
-  .fade-translate-enter, .fade-translate-leave-to /* .fade-translate-leave-active below version 2.1.8 */ {
+  .fade-translate-enter-from, .fade-translate-leave-to /* .fade-translate-leave-active below version 2.1.8 */ {
     opacity: 0;
     max-height: 0 !important;
   }

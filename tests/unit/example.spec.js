@@ -1,5 +1,6 @@
 import { shallowMount } from '@vue/test-utils'
-import LoginComponent from '@/components/LoginComponent.vue'
+import LoginComponent from '~/src/components/LoginComponent.vue'
+import { describe, expect, test } from 'vitest'
 
 describe('LoginComponent.vue', () => {
   test('renders logo when passed', () => {

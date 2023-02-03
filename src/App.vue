@@ -1,51 +1,52 @@
+<script lang="ts" setup>
+import { ref, onMounted, getCurrentInstance } from 'vue'
+import LoginComponent from './components/LoginComponent.vue'
+
+const props = withDefaults(defineProps<{
+  logo?: string,
+  appName?: string
+}>(), {
+  logo: '/security_shield.png',
+  appName: 'Your app name here'
+})
+
+const showLogin = ref<boolean>(false)
+const error = ref<string>('')
+const isSubmitting = ref<boolean>(false)
+const initialized = ref<boolean>(false)
+defineExpose({
+  showLogin,
+  error,
+  isSubmitting,
+  initialized
+})
+
+const $emit = defineEmits<{
+  (e: 'submit', value: any): void
+}>()
+const onSubmit = ($event: any) => {
+  error.value = ''
+  $emit('submit', $event)
+}
+
+onMounted(() => {
+  (window as any).app = getCurrentInstance()
+  setTimeout(function () { showLogin.value = true }, 1000)
+})
+</script>
+
 <template>
   <div id="app">
     <LoginComponent
         :show.sync="showLogin"
         :logo="logo"
         :app-name="appName"
+        :initialized="initialized"
         :error="error"
         :is-submitting.sync="isSubmitting"
         @submit="onSubmit"/>
   </div>
 </template>
-
-<script>
-import LoginComponent from './components/LoginComponent.vue'
-
-export default {
-  name: 'app',
-  components: {
-    LoginComponent
-  },
-  props: {
-    logo: {
-      type: String,
-      default: '/security_shield.png'
-    },
-    appName: {
-      type: String,
-      default: 'Your app name here'
-    }
-  },
-  data () {
-    return {
-      showLogin: false,
-      error: '',
-      isSubmitting: false
-    }
-  },
-  methods: {
-    onSubmit ($event) {
-      this.error = ''
-      this.$emit('submit', $event)
-    }
-  },
-  mounted () {
-    setTimeout(function () { this.showLogin = true }.bind(this), 1000)
-  }
-}
-</script>
 
 <style lang="scss">
 

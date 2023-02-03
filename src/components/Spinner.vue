@@ -1,43 +1,39 @@
+<script lang="ts" setup>
+import { computed } from 'vue';
+
+const props = withDefaults(defineProps<{
+  color?: string,
+  size?: string
+}>(), {
+  color: undefined as any as string,
+  size: '32px'
+})
+
+const spinnerColor = computed(() => {
+  if (props.color) {
+    return props.color
+  } else {
+    return 'inherit;'
+  }
+})
+
+const style = computed(() => {
+  const ret = {}
+  if (props.size) {
+    Object.assign(ret, {
+      width: props.size,
+      height: props.size
+    })
+  }
+  return ret
+})
+</script>
+
 <template>
   <svg class="loading-spinner" :width="size" :height="size" viewBox="-24 -24 48 48">
     <circle class="path" :style="{stroke: spinnerColor}" cx="0" cy="0" r="20" fill="none" stroke-width="4" />
   </svg>
 </template>
-
-<script>
-export default {
-  name: 'Spinner',
-  props: {
-    color: {
-      type: String,
-      default: undefined
-    },
-    size: {
-      type: String,
-      default: '32px'
-    }
-  },
-  computed: {
-    spinnerColor () {
-      if (this.color) {
-        return this.color
-      } else {
-        return 'inherit;'
-      }
-    },
-    style () {
-      const ret = {}
-      if (this.size) {
-        Object.assign(ret, {
-          width: this.size,
-          height: this.size
-        })
-      }
-      return ret
-    }
-  }
-}
-</script>
 
 <style lang="scss" scoped>
 // Most of this code is borrowed from https://codepen.io/marshmallowsyrup/pen/gzaewJ
