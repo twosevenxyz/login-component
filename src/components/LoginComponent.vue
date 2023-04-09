@@ -11,8 +11,31 @@ import axios from 'axios'
 // @ts-ignore../lib/constants
 import { VueAuthenticate } from '@gurupras/vue-authenticate'
 import { tabs } from '../lib/constants'
-import type { Theme } from '../lib/theme'
 import { computed, onMounted, ref, Ref, watch } from 'vue'
+
+// FIXME: This is duplicated here and in lib/types
+// Remember to update both if making changes
+export interface Theme {
+  background?: string,
+  text?: string,
+  invertedText?: string
+}
+
+export interface LoginConfig {
+  social?: any,
+  show?: boolean,
+  initialized?: boolean,
+  loggedInId?: any,
+  appName?: string,
+  theme?: Theme,
+  logo?: string,
+  error?: string,
+  info?: string,
+  tos?: string,
+  privacyPolicy?: string,
+  isSubmitting?: boolean
+}
+
 
 type ErrorEntry = {
   text: string
@@ -31,20 +54,7 @@ const errors: Record<string, ErrorEntry> = {
   }
 }
 
-const props = withDefaults(defineProps<{
-  social?: any,
-  show?: boolean,
-  initialized?: boolean,
-  loggedInId?: any,
-  appName?: string,
-  theme?: Theme,
-  logo?: string,
-  error?: string,
-  info?: string,
-  tos?: string,
-  privacyPolicy?: string,
-  isSubmitting?: boolean
-}>(), {
+const props = withDefaults(defineProps<LoginConfig>(), {
   social: {
     providers: {}
   },

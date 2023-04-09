@@ -1,2 +1,5 @@
 import LoginComponent from './components/LoginComponent.vue'
-export { LoginComponent }
+import type { LoginConfig } from './lib/types'
+import { tabs as Tabs} from './lib/constants'
+
+export { LoginComponent, LoginConfig, Tabs }

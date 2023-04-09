@@ -1,8 +1,9 @@
 {
   "name": "@twosevenxyz/login-component",
-  "version": "1.0.0",
+  "version": "2.0.0-alpha8",
   "module": "dist/login-component.mjs",
   "main": "dist/login-component.cjs",
+  "typings": "dist/src/lib.d.ts",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build --config vite.config.lib.ts",
