@@ -1,19 +1,16 @@
 <template>
 <div class="social-login-root">
   <slot name="logo">
-    <FontAwesomeIcon class="logo" icon="lock"/>
+    <i-mdi-lock class="logo"/>
   </slot>
   <span>Login with {{ name }}</span>
 </div>
 </template>
 
 <script>
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-
 export default {
   name: 'social-login-button',
   components: {
-    FontAwesomeIcon
   },
   props: {
     name: {
