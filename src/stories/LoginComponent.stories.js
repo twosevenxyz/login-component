@@ -98,7 +98,6 @@ export default {
 }
 
 const Template = (args, { argTypes }) => {
-  debugger
   return {
     template: `
     <LoginComponent
