@@ -143,12 +143,10 @@
 
           <a v-show="initialized && !showLoggedInAccounts" class="submit-btn is-large is-fullwidth" :disabled="isSubmitting" style="overflow: hidden;" @click="onSubmit">
             <transition name="slide-from-bottom">
-              <span v-if="!isSubmitting">
-                {{ buttonText }}
+              <span class="icon-text" v-if="!isSubmitting">
+                <span>{{ buttonText }}</span>
                 <span class="icon" v-if="!isSubmitting">
-                  <i class="fab">
-                    <Icon icon="mdi-arrow-right"/>
-                  </i>
+                  <Icon icon="mdi-chevron-right" :inline="true" style="width: inherit; height: inherit;"/>
                 </span>
               </span>
               <div v-else>
