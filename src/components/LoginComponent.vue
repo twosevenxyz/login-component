@@ -831,6 +831,8 @@ $text-color: #2a2a2a;
   }
   .slide-from-bottom-enter-active, .slide-from-bottom-leave-active {
     position: absolute;
+    display: flex;
+    justify-content: center;
     width: 100%;
     margin-left: auto;
     margin-right: auto;
