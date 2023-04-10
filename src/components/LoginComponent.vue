@@ -10,7 +10,7 @@
         <div class="modal-content" v-if="show" :class="{uninitialized: !initialized, 'logged-in': showLoggedInAccounts}" style="position: relative;">
           <a class="browser-default modal-close modal-btn is-large" aria-label="close" @click="$emit('update:show', false)"></a>
           <a class="browser-default modal-back modal-btn is-large has-text-centered" aria-label="back" @click="currentTab = prevTab" v-show="currentTab === tabs.FORGOT_PASSWORD">
-            <i-mdi-arrow-left/>
+            <Icon icon="mdi-arrow-left"/>
           </a>
           <div class="banner-container">
             <div class="banner">
@@ -44,7 +44,7 @@
                     <span class="icon is-small" style="flex-shrink: 0;">
                       <GoogleLogo v-if="loggedInId.provider === 'google'" class="social-btn google" style="width: 22px; height: auto;"/>
                       <FacebookLogo v-else-if="loggedInId.provider === 'facebook'" class="social-btn" style="width: 32px; height: 32px;"/>
-                      <i-mdi-lock v-else/>
+                      <Icon icon="mdi-lock" v-else/>
                     </span>
                     <span class="is-clipped" style="text-overflow: ellipsis" :title="loggedInId.email">{{ loggedInId.email }}</span>
                   </button>
@@ -94,12 +94,12 @@
                                 <div class="column is-paddingless">
                                   <InputElement type="email" name="username" placeholder="your-email-id@example.com" autocomplete="username" v-model="username" :help="usernameHelp.text" @submit="onSubmit">
                                     <template v-slot:leftIcon>
-                                      <i-mdi-email/>
+                                      <Icon icon="mdi-email"/>
                                     </template>
                                   </InputElement>
                                   <InputElement type="password" name="password" placeholder="password" :autocomplete="currentTab === tabs.LOGIN ? 'current-password' : 'new-password'" v-model="password" :help="passwordHelp.text" @submit="onSubmit">
                                     <template v-slot:leftIcon>
-                                      <i-mdi-lock/>
+                                      <Icon icon="mdi-lock"/>
                                     </template>
                                   </InputElement>
                                 </div>
@@ -132,7 +132,7 @@
                     <p class="has-text-centered" style="margin: 16px; font-size: 14px;">Enter your email address. You will receive an email to reset your password.</p>
                     <InputElement type="email" placeholder="your-email-id@example.com" v-model="forgotEmail" :help="forgotEmailHelp.text" @submit="onSubmit">
                       <template v-slot:leftIcon>
-                        <i-mdi-email/>
+                        <Icon icon="mdi-email"/>
                       </template>
                     </InputElement>
                   </div>
@@ -147,7 +147,7 @@
                 {{ buttonText }}
                 <span class="icon" v-if="!isSubmitting">
                   <i class="fab">
-                    <i-mdi-arrow-right/>
+                    <Icon icon="mdi-arrow-right"/>
                   </i>
                 </span>
               </span>
@@ -170,6 +170,7 @@ import FacebookLogo from './facebook-logo.vue'
 import GoogleLogo from './google-logo.vue'
 import SocialLoginButton from './social-login-button.vue'
 import tinycolor from 'tinycolor2'
+import { Icon } from '@iconify/vue2'
 
 import axios from 'axios'
 import VueAxios from 'vue-axios'
@@ -197,7 +198,8 @@ const LoginComponent = {
     InputElement,
     FacebookLogo,
     GoogleLogo,
-    SocialLoginButton
+    SocialLoginButton,
+    Icon
   },
   props: {
     social: {

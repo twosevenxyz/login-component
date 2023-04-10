@@ -1,16 +1,19 @@
 <template>
 <div class="social-login-root">
   <slot name="logo">
-    <i-mdi-lock class="logo"/>
+    <Icon icon="mdi-lock" class="logo"/>
   </slot>
   <span>Login with {{ name }}</span>
 </div>
 </template>
 
 <script>
+import { Icon } from '@iconify/vue2'
+
 export default {
   name: 'social-login-button',
   components: {
+    Icon
   },
   props: {
     name: {

@@ -24,6 +24,7 @@
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "7.12",
     "@iconify-json/mdi": "^1.1.50",
+    "@iconify/vue2": "^2.1.0",
     "@storybook/addon-essentials": "^7.0.2",
     "@storybook/addon-interactions": "^7.0.2",
     "@storybook/addon-links": "^7.0.2",
