@@ -53,18 +53,6 @@ const $inputAttrs = computed(() => {
 </template>
 
 <style lang="scss" scoped>
-@import 'bulma/sass/utilities/_all.sass';
-@import 'bulma/sass/base/_all.sass';
-@import 'bulma/sass/components/modal.sass';
-@import 'bulma/sass/components/tabs.sass';
-@import 'bulma/sass/elements/image.sass';
-@import 'bulma/sass/elements/button.sass';
-@import 'bulma/sass/grid/columns.sass';
-
-@import 'bulma/sass/form/shared.sass';
-@import 'bulma/sass/form/tools.sass';
-@import 'bulma/sass/form/input-textarea.sass';
-
 .control {
   font-size: 14px !important;
   input {
@@ -95,6 +83,8 @@ const $inputAttrs = computed(() => {
     :deep(svg) {
       font-size: inherit;
       width: inherit;
+      align-self: center;
+      padding: 0;
     }
   }
 }

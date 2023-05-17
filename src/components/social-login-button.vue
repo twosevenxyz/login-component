@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { Icon } from '@iconify/vue'
+
 defineProps<{
   name: string
 }>()
@@ -8,7 +10,7 @@ defineProps<{
 <template>
 <div class="social-login-root">
   <slot name="logo">
-    <i-mdi-lock class="logo"/>
+    <Icon icon="mdi-lock" class="logo"/>
   </slot>
   <span>Login with {{ name }}</span>
 </div>
