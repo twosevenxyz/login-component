@@ -11,7 +11,7 @@ import axios from 'axios'
 // @ts-ignore../lib/constants
 import { VueAuthenticate } from '@gurupras/vue-authenticate'
 import { tabs } from '../lib/constants'
-import { computed, nextTick, onMounted, ref, Ref, watch } from 'vue'
+import { computed, nextTick, onMounted, ref, Ref, watch } from 'vue-demi'
 import { Icon } from  '@iconify/vue'
 
 // FIXME: This is duplicated here and in lib/types

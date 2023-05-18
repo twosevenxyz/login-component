@@ -20,8 +20,12 @@ export default defineConfig({
     }),
     Icons()
   ],
+  optimizeDeps: {
+    exclude: ['vue-demi']
+  },
   test: {
     coverage: {
+      provider: 'c8',
       enabled: true
     }
   }
