@@ -11,7 +11,7 @@ import axios from 'axios'
 // @ts-ignore../lib/constants
 import { VueAuthenticate } from '@gurupras/vue-authenticate'
 import { tabs } from '../lib/constants'
-import { computed, onMounted, ref, Ref, watch } from 'vue'
+import { computed, nextTick, onMounted, ref, Ref, watch } from 'vue'
 import { Icon } from  '@iconify/vue'
 
 // FIXME: This is duplicated here and in lib/types
@@ -92,6 +92,8 @@ const $emit = defineEmits<{
 
 const $el = ref<HTMLElement>(null as any)
 const bg = ref<HTMLElement>(null as any)
+const showBG = ref<boolean>(false)
+const showModal = ref<boolean>(false)
 const currentTab = ref<string>(tabs.LOGIN)
 const prevTab = ref<string>(tabs.LOGIN)
 const username = ref<string>('')
@@ -137,11 +139,16 @@ const showLoggedInAccounts = computed(() => {
   return props.initialized && props.loggedInId && !hideLoggedInAccounts.value
 })
 
-watch(() => props.show, v => {
+watch(() => props.show, async v => {
   if (v) {
+    showBG.value = true
+    await nextTick()
+    showModal.value = true
     $emit('modal:show')
   } else {
+    showModal.value = false
     $emit('modal:hide')
+    // showBG is updated once it has finished closing
   }
 })
 
@@ -258,6 +265,7 @@ const resetAllHelp = () => {
 const afterExit = () => {
   bg.value.classList.remove('is-leaving')
   $emit('modal:closed')
+  showBG.value = false
 }
 
 const onExit = () => {
@@ -300,7 +308,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="login-root" ref="$el" :style="style">
+  <div class="login-root" ref="$el" :style="style" v-show="showBG">
     <div class="login-modal is-active">
       <div class="modal-background" ref="bg"></div>
       <transition name="slide-from-bottom"
