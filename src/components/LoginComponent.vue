@@ -77,6 +77,7 @@ const props = withDefaults(defineProps<LoginConfig>(), {
 })
 
 const $emit = defineEmits<{
+  (e: 'update:show', value: boolean): void
   (e: 'modal:show'): void,
   (e: 'modal:hide'): void,
   (e: 'update:error', value: string): void,
