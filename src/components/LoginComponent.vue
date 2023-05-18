@@ -497,6 +497,11 @@ $facebook-background: #3b579d;
 
 $text-color: #2a2a2a;
 
+$modal-content-max-height-transition: max-height 0.3s linear;
+
+$slide-from-bottom-from-to: transform 0.3s linear;
+$slide-from-bottom-active: transform 0.3s ease-in-out;
+
 .login-root :deep() {
   .columns {
     margin-left: 0;
@@ -545,10 +550,15 @@ $text-color: #2a2a2a;
       max-width: $container-width;
       min-height: 220px;
       box-shadow: 0 0 40px 4px #1e1e1e;
-      transition-property: max-height;
-      transition-timing-function: linear;
-      transition-duration: 0.3s;
+      transition: $modal-content-max-height-transition;
       border-bottom-color: var(--generic-login-theme);
+
+      &.slide-from-bottom-enter-from, &.slide-from-bottom-leave-to {
+        transition: #{$modal-content-max-height-transition}, #{$slide-from-bottom-from-to};
+      }
+      &.slide-from-bottom-enter-active, &.slide-from-bottom-leave-active {
+        transition: #{$modal-content-max-height-transition}, #{$slide-from-bottom-active};
+      }
       &.uninitialized, &.logged-in {
         display: flex;
         flex-direction: column;
@@ -839,14 +849,10 @@ $text-color: #2a2a2a;
   }
   .slide-from-bottom-enter-active, .slide-from-bottom-leave-active {
     position: absolute;
-    display: flex;
-    justify-content: center;
     width: 100%;
     margin-left: auto;
     margin-right: auto;
-    transition-property: transform !important;
-    transition-timing-function: ease-in-out;
-    transition-duration: 0.3s;
+    transition: $slide-from-bottom-active;
     transform: translateY(0%);
   }
   .slide-from-bottom-enter-from, .slide-from-bottom-leave-to /* .fade-leave-active below version 2.1.8 */ {
@@ -854,9 +860,7 @@ $text-color: #2a2a2a;
     width: 100%;
     margin-left: auto;
     margin-right: auto;
-    transition-property: transform !important;
-    transition-timing-function: linear;
-    transition-duration: 0.3s;
+    transition: $slide-from-bottom-from-to;
     transform: translateY(200%);
   }
 
