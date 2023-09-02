@@ -531,6 +531,8 @@ $text-color: #2a2a2a;
     .modal-content {
       width: auto;
       overflow-y: auto;
+      display: flex;
+      flex-direction: column;
       background-color: var(--generic-login-theme);
       border-radius: $border-radius;
       min-width: $container-width;
@@ -542,8 +544,6 @@ $text-color: #2a2a2a;
       transition-duration: 0.3s;
       border-bottom-color: var(--generic-login-theme);
       &.uninitialized, &.logged-in {
-        display: flex;
-        flex-direction: column;
         flex: 1;
         min-height: $uninitialized-modal-content-height;
         max-height: $uninitialized-modal-content-height;
@@ -809,6 +809,7 @@ $text-color: #2a2a2a;
     text-align: center;
     justify-content: center;
     height: 64px;
+    min-height: 64px;
     font-size: 14px;
     letter-spacing: 1px;
     text-transform: uppercase;
