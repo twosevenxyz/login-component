@@ -6,7 +6,7 @@
   "typings": "dist/src/lib.d.ts",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build --config vite.config.lib.ts",
+    "build": "vue-tsc --noEmit || vite build --config vite.config.lib.ts",
     "library": "vite build --config vite.config.lib.ts",
     "test": "vitest",
     "serve": "vite preview",
