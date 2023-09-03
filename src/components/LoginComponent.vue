@@ -55,8 +55,8 @@
                 </p>
                 </div>
               </div>
-              <div v-else-if="initialized && !showLoggedInAccounts">
-                <transition-group :name="currentTab === tabs.FORGOT_PASSWORD ? 'slide-out-left' : 'slide-out-right'">
+              <div v-else-if="initialized && !showLoggedInAccounts" class="is-flex is-flex-direction-column is-flex-grow-1">
+                <transition-group name="slide-out-left" tag="div" class="is-flex is-flex-direction-column is-flex-grow-1" style="position: relative">
                   <div class="login-container is-paddingless" v-if="currentTab === tabs.LOGIN || currentTab === tabs.SIGNUP" :key="currentContainer">
                     <div class="login-content-container has-text-centered">
                       <div class="columns is-vcentered is-marginless is-paddingless">
@@ -875,62 +875,28 @@ $text-color: #2a2a2a;
     transform: translateY(200%);
   }
 
-  .slide-out-left-enter-active, .slide-out-left-leave-active {
-    // margin-left: auto;
-    // margin-right: auto;
-    // display: flex;
-    // flex-direction: 1;
-    // flex: 1;
+  .slide-out-left-enter-from, .slide-out-left-enter-active, .slide-out-left-leave-active {
     transition-property: all;
     transition-timing-function: linear;
     transition-duration: 0.5s;
     transform: translateX(0%);
   }
+
+  .slide-out-left-leave-from, .slide-out-left-leave-active, .slide-out-left-leave-to {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+    height: 100%;
+
+  }
+
   .slide-out-left-leave-active {
     position: absolute;
     width: 100%;
-    // max-height: 0 !important;
   }
 
   .slide-out-left-enter, .slide-out-left-leave-to {
-    // margin-left: auto;
-    // margin-right: auto;
-    // display: flex;
-    // flex-direction: 1;
-    // flex: 1;
-    transition-property: all;
-    transition-timing-function: ease-in-out;
-    transition-duration: 0.5s;
-    transform: translateX(-200%);
-    // max-height: initial;
-  }
-
-  .slide-out-right-enter-active, .slide-out-right-leave-active {
-    // display: flex;
-    // flex-direction: 1;
-    // flex: 1;
-    // margin-left: auto;
-    // margin-right: auto;
-    transition-property: all;
-    transition-timing-function: ease-in-out;
-    transition-duration: 0.5s;
-    transform: translateX(0%);
-  }
-
-  .slide-out-right-leave-active {
-    position: absolute;
-    width: 100%;
-    // max-height: 0 !important;
-  }
-
-  .slide-out-right-enter, .slide-out-right-leave-to {
-    position: absolute;
-    width: 100%;
-    // margin-left: auto;
-    // margin-right: auto;
-    // display: flex;
-    // flex-direction: 1;
-    // flex: 1;
     transition-property: all;
     transition-timing-function: ease-in-out;
     transition-duration: 0.5s;
