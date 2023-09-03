@@ -8,9 +8,11 @@
           @enter="onEnter"
           @after-enter="afterEnter">
         <div class="modal-content" v-if="show" :class="{uninitialized: !initialized, 'logged-in': showLoggedInAccounts}" style="position: relative;">
-          <a class="browser-default modal-close modal-btn is-large" aria-label="close" @click="$emit('update:show', false)"></a>
+          <a class="browser-default modal-close modal-btn is-large" aria-label="close" @click="$emit('update:show', false)">
+            <Icon :icon="icons.mdiClose"/>
+          </a>
           <a class="browser-default modal-back modal-btn is-large has-text-centered" aria-label="back" @click="currentTab = prevTab" v-show="currentTab === tabs.FORGOT_PASSWORD">
-            <Icon icon="mdi-arrow-left"/>
+            <Icon :icon="icons.mdiArrowLeft"/>
           </a>
           <div class="banner-container">
             <div class="banner">
@@ -44,7 +46,7 @@
                     <span class="icon is-small" style="flex-shrink: 0;">
                       <GoogleLogo v-if="loggedInId.provider === 'google'" class="social-btn google" style="width: 22px; height: auto;"/>
                       <FacebookLogo v-else-if="loggedInId.provider === 'facebook'" class="social-btn" style="width: 32px; height: 32px;"/>
-                      <Icon icon="mdi-lock" v-else/>
+                      <Icon :icon="icons.mdiLock" v-else/>
                     </span>
                     <span class="is-clipped" style="text-overflow: ellipsis" :title="loggedInId.email">{{ loggedInId.email }}</span>
                   </button>
@@ -94,12 +96,12 @@
                                 <div class="column is-paddingless">
                                   <InputElement type="email" name="username" placeholder="your-email-id@example.com" autocomplete="username" v-model="username" :help="usernameHelp.text" @submit="onSubmit">
                                     <template v-slot:leftIcon>
-                                      <Icon icon="mdi-email"/>
+                                      <Icon :icon="icons.mdiEmail"/>
                                     </template>
                                   </InputElement>
                                   <InputElement type="password" name="password" placeholder="password" :autocomplete="currentTab === tabs.LOGIN ? 'current-password' : 'new-password'" v-model="password" :help="passwordHelp.text" @submit="onSubmit">
                                     <template v-slot:leftIcon>
-                                      <Icon icon="mdi-lock"/>
+                                      <Icon :icon="icons.mdiLock"/>
                                     </template>
                                   </InputElement>
                                 </div>
@@ -132,7 +134,7 @@
                     <p class="has-text-centered" style="margin: 16px; font-size: 14px;">Enter your email address. You will receive an email to reset your password.</p>
                     <InputElement type="email" placeholder="your-email-id@example.com" v-model="forgotEmail" :help="forgotEmailHelp.text" @submit="onSubmit">
                       <template v-slot:leftIcon>
-                        <Icon icon="mdi-email"/>
+                        <Icon :icon="icons.mdiEmail"/>
                       </template>
                     </InputElement>
                   </div>
@@ -146,7 +148,7 @@
               <span class="icon-text" v-if="!isSubmitting">
                 <span>{{ buttonText }}</span>
                 <span class="icon" v-if="!isSubmitting">
-                  <Icon icon="mdi-chevron-right" :inline="true" style="width: inherit; height: inherit;"/>
+                  <Icon :icon="icons.mdiChevronRight" :inline="true" style="width: inherit; height: inherit;"/>
                 </span>
               </span>
               <div v-else>
@@ -168,7 +170,14 @@ import FacebookLogo from './facebook-logo.vue'
 import GoogleLogo from './google-logo.vue'
 import SocialLoginButton from './social-login-button.vue'
 import tinycolor from 'tinycolor2'
+
+// Icons
 import { Icon } from '@iconify/vue2'
+import mdiClose from '@iconify-icons/mdi/close'
+import mdiArrowLeft from '@iconify-icons/mdi/arrow-left'
+import mdiLock from '@iconify-icons/mdi/lock'
+import mdiEmail from '@iconify-icons/mdi/email'
+import mdiChevronRight from '@iconify-icons/mdi/chevron-right'
 
 import axios from 'axios'
 import VueAxios from 'vue-axios'
@@ -273,7 +282,14 @@ const LoginComponent = {
       forgotEmailHelp: {},
       tabs,
       hideLoggedInAccounts: false,
-      submitSpinnerColor: '#fff'
+      submitSpinnerColor: '#fff',
+      icons: {
+        mdiClose,
+        mdiArrowLeft,
+        mdiEmail,
+        mdiLock,
+        mdiChevronRight
+      }
     }
   },
   computed: {
@@ -697,24 +713,30 @@ $text-color: #2a2a2a;
         }
         &.modal-close {
           right: 12px;
-          top: 12px;
+          &::before {
+            content: unset;
+          }
+          &::after {
+            content: unset;
+          }
+
         }
         &.modal-back {
+          left: 12px;
+        }
+
+        &.modal-back, &.modal-close {
           display: flex;
           flex-direction: column;
           flex: 1;
           align-items: center;
           justify-content: center;
-          left: 12px;
           top: 12px;
           border-radius: 290486px;
-          ::v-deep svg {
-            width: 12px;
-            height: 12px;
-            position: absolute;
-            left: 0;
-            top: 0;
-            transform: translate(50%, 50%);
+
+          svg {
+            height: 16px;
+            width: 16px;
           }
         }
       }
