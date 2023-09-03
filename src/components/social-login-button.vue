@@ -14,8 +14,7 @@ import mdiLock from '@iconify-icons/mdi/lock'
 export default {
   name: 'social-login-button',
   components: {
-    Icon,
-    mdiLock
+    Icon
   },
   props: {
     name: {
