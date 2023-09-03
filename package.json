@@ -54,6 +54,7 @@
   "exports": {
     ".": "./dist/login-component.js",
     "./style.css": "./dist/style.css",
-    "./src/*": "./src/*"
+    "./src/components/*": "./src/components/*",
+    "./dist/*": "./dist/*"
   }
 }
