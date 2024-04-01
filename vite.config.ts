@@ -7,7 +7,7 @@ import Components from 'unplugin-vue-components/vite'
 import { fileURLToPath } from 'url'
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export const sharedConfig = defineConfig({
   resolve: {
     alias: {
       '~/': fileURLToPath(new URL('./', import.meta.url))
@@ -25,8 +25,10 @@ export default defineConfig({
   },
   test: {
     coverage: {
-      provider: 'c8',
+      provider: 'v8',
       enabled: true
     }
   }
 })
+
+export default sharedConfig
