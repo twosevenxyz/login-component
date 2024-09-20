@@ -8,7 +8,7 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, 'src/lib.js'),
       name: 'LoginComponent',
-      formats: ['es', 'cjs']
+      formats: ['es', 'cjs', 'umd', 'iife']
     },
     rollupOptions: {
       external: ['vue'],
