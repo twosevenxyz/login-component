@@ -12,7 +12,7 @@ const libConfig = defineConfig({
         entry: resolve(__dirname, 'src/lib.ts'),
         name: 'LoginComponent',
         fileName: 'login-component',
-        formats: ['es', 'cjs', 'umd']
+        formats: ['es', 'cjs', 'umd', 'iife']
       },
       rollupOptions: {
         external: ['vue'],
